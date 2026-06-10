@@ -268,7 +268,8 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--dark);font-f
 #admin{background:var(--dark2);overflow-y:auto;padding-top:60px;width:100vw;height:100vh}
 #admin::-webkit-scrollbar{width:3px}
 #admin::-webkit-scrollbar-thumb{background:var(--g3);border-radius:2px}
-.adm-login{position:absolute;inset:0;background:var(--dark2);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+.adm-login{position:absolute;inset:0;background:var(--dark2);z-index:20;display:none;align-items:center;justify-content:center;padding:16px}
+.adm-login.show{display:flex}
 .login-card{background:linear-gradient(135deg,rgba(27,94,32,0.4),rgba(8,15,9,0.98));border:1px solid rgba(200,150,12,0.2);border-radius:18px;padding:36px;max-width:360px;width:100%;text-align:center}
 .lci{font-size:50px;display:block;margin-bottom:16px;animation:ibFloat 3s ease-in-out infinite}
 .lct{font-family:var(--ch);font-size:24px;color:var(--gold2);margin-bottom:5px;font-weight:900}
@@ -371,10 +372,8 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--dark);font-f
 .toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(16px);background:linear-gradient(135deg,var(--g1),var(--g2));color:white;padding:10px 24px;border-radius:50px;font-family:var(--ch);font-size:12px;letter-spacing:1px;opacity:0;transition:all 0.4s;z-index:9999;pointer-events:none;white-space:nowrap;font-weight:700;border:1px solid rgba(200,150,12,0.28)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* FAB */
-#admFab{position:fixed;bottom:10px;right:10px;z-index:9999;display:none;flex-direction:column;align-items:center;gap:3px}
-.fab-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));border:2px solid rgba(200,150,12,0.5);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(27,94,32,0.7),0 0 0 3px rgba(200,150,12,0.1);animation:sealGlow 2.5s ease-in-out infinite}
-.fab-lbl{font-family:var(--ch);font-size:8px;color:var(--g5);letter-spacing:1.5px;background:rgba(8,15,9,0.9);padding:2px 7px;border-radius:4px;border:1px solid rgba(67,160,71,0.22)}
+/* FAB — hidden, secret access only */
+#admFab{display:none !important}
 </style>
 </head>
 <body>
@@ -523,10 +522,10 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--dark);font-f
     <!-- ADMISSION FORM -->
     <section class="sec" id="admission-sec">
       <span class="stag">📋 Enroll Now</span>
-      <h2 class="sh2">Admission <em>Form 2024-25</em></h2>
+      <h2 class="sh2">Admission <em>Form 2026-27</em></h2>
       <div class="sdiv"></div>
       <div class="adm-wrap">
-        <div style="font-family:var(--ch);font-size:18px;color:var(--gold2);margin-bottom:5px;font-weight:900" id="admTitle">Diploma in Naturopathy — 2024-25</div>
+        <div style="font-family:var(--ch);font-size:18px;color:var(--gold2);margin-bottom:5px;font-weight:900" id="admTitle">Diploma in Naturopathy — 2026-27</div>
         <div style="font-family:var(--cb);font-size:13px;color:rgba(255,253,245,0.42);margin-bottom:22px">सभी details सही भरें और submit करें</div>
         <div class="step-bar">
           <div class="step active" onclick="gotoFStep(0)"><span class="step-n">①</span>Personal</div>
@@ -595,7 +594,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--dark);font-f
     </section>
 
     <footer class="footer">
-      <div class="ft-logo" id="ftLogo">🌿 JRH Institute & Research Centre</div>
+      <div class="ft-logo" id="ftLogo" onclick="secretTap()">🌿 JRH Institute & Research Centre</div>
       <div class="ft-sub" id="ftSub2">Natural Healing · Healthy Living · Transport Nagar, Bareilly</div>
       <div class="ft-links">
         <span class="ft-link" onclick="gotoSec('hero-sec')">Home</span>
@@ -605,7 +604,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--dark);font-f
         <span class="ft-link" onclick="gotoSec('admission-sec')">Admission</span>
         <span class="ft-link" onclick="gotoSec('contact-sec')">Contact</span>
       </div>
-      <div class="ft-sub">Jami Raza Herbal Pvt. Ltd. · © 2024 All Rights Reserved</div>
+      <div class="ft-sub">Jami Raza Herbal Pvt. Ltd. · © 2026 All Rights Reserved</div>
     </footer>
   </div>
 
@@ -774,7 +773,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--dark);font-f
           <div class="er" style="margin-top:8px"><div class="eg"><input type="password" class="ei" id="np1" placeholder="New Password"></div><div class="eg"><input type="password" class="ei" id="np2" placeholder="Confirm Password"></div></div>
           <button class="sbtn" onclick="chgPass()">🔒 Password Change</button>
         </div>
-        <div style="margin-top:14px"><button class="sbtn" style="background:linear-gradient(135deg,#1a5a2a,#2a8a40)" onclick="if(confirm('Reset to default?'))location.reload()">🔄 Reset to Default</button></div>
+        <div style="margin-top:14px"><button class="sbtn" style="background:linear-gradient(135deg,#1a5a2a,#2a8a40)" onclick="if(confirm('Reset to default?')){localStorage.removeItem('jrh_data_v1');location.reload()}">🔄 Reset to Default</button></div>
       </div>
     </div>
   </div>
@@ -815,27 +814,46 @@ let D = {
     {emoji:'🌱',cap:'Herbs'},{emoji:'📋',cap:'Certificate'},{emoji:'🤝',cap:'Seminar'},
   ],
   notices:[
-    {icon:'📢',title:'Admissions Open 2024-25 — Diploma in Naturopathy',date:'01 Nov 2024',isNew:true},
-    {icon:'💰',title:'Early Bird Discount Available — Limited Time Offer',date:'20 Oct 2024',isNew:true},
-    {icon:'🏆',title:'New Batch Starting Soon — Limited Seats Available',date:'10 Oct 2024',isNew:true},
-    {icon:'📚',title:'Course Material Updated — New Modules Added',date:'01 Oct 2024',isNew:false},
-    {icon:'🌿',title:'New Herbal Research Published by JRH Team',date:'20 Sep 2024',isNew:false},
-    {icon:'🎓',title:'Previous Batch Placement: 95% Success Rate',date:'10 Sep 2024',isNew:false},
+    {icon:'📢',title:'Admissions Open 2026-27 — Diploma in Naturopathy',date:'01 Nov 2026',isNew:true},
+    {icon:'💰',title:'Early Bird Discount Available — Limited Time Offer',date:'20 Oct 2026',isNew:true},
+    {icon:'🏆',title:'New Batch Starting Soon — Limited Seats Available',date:'10 Oct 2026',isNew:true},
+    {icon:'📚',title:'Course Material Updated — New Modules Added',date:'01 Oct 2026',isNew:false},
+    {icon:'🌿',title:'New Herbal Research Published by JRH Team',date:'20 Sep 2026',isNew:false},
+    {icon:'🎓',title:'Previous Batch Placement: 95% Success Rate',date:'10 Sep 2026',isNew:false},
   ],
 };
 
 let loggedIn=false, pickedLogo='🌿', admStep=0;
 
 // ============================================================
+// LOCAL STORAGE — PERSIST DATA
+// ============================================================
+const LS_KEY='jrh_data_v1';
+function saveToLS(){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(D));}catch(e){}
+}
+function loadFromLS(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw){
+      const saved=JSON.parse(raw);
+      // Merge saved data into D (preserving any new default keys)
+      Object.assign(D,saved);
+      pickedLogo=D.logo||'🌿';
+    }
+  }catch(e){}
+}
+
+// ============================================================
 // INIT
 // ============================================================
 window.onload=function(){
+  loadFromLS();
   initBG(); initLeaves();
   initChat();
   setTimeout(()=>{
     document.getElementById('splash').style.display='none';
     showView('home'); renderHome();
-    document.getElementById('admFab').style.display='flex';
   },4300);
 };
 
@@ -889,13 +907,26 @@ function initLeaves(){
 // ============================================================
 function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(v).classList.add('active')}
 function goHome(){showView('home');renderHome()}
-function goAdmin(){showView('admin');if(!loggedIn)document.getElementById('admLogin').style.display='flex';else{document.getElementById('admLogin').style.display='none';fillAdmin()}}
+function goAdmin(){
+  loggedIn=false;
+  document.getElementById('lusr').value='';
+  document.getElementById('lpass').value='';
+  document.getElementById('lerr').style.display='none';
+  showView('admin');
+  document.getElementById('admLogin').classList.add('show');
+}
 function doLogin(){
   const u=document.getElementById('lusr').value.trim(),p=document.getElementById('lpass').value;
-  if(u==='admin'&&p===D.adminPass){loggedIn=true;document.getElementById('admLogin').style.display='none';fillAdmin();toast('✅ Welcome Admin!')}
-  else{document.getElementById('lerr').style.display='block';setTimeout(()=>document.getElementById('lerr').style.display='none',3000)}
+  if(u==='admin'&&p===D.adminPass){
+    loggedIn=true;
+    document.getElementById('admLogin').classList.remove('show');
+    fillAdmin();toast('✅ Welcome Admin!');
+  } else {
+    document.getElementById('lerr').style.display='block';
+    setTimeout(()=>document.getElementById('lerr').style.display='none',3000);
+  }
 }
-function doLogout(){loggedIn=false;document.getElementById('admLogin').style.display='flex';document.getElementById('lusr').value='';document.getElementById('lpass').value=''}
+function doLogout(){loggedIn=false;document.getElementById('admLogin').classList.add('show');document.getElementById('lusr').value='';document.getElementById('lpass').value=''}
 
 // ============================================================
 // RENDER HOME
@@ -1053,7 +1084,7 @@ function submitApp(){
     adminNote:''
   });
   ['af-name','af-dob','af-mobile','af-email','af-addr','af-board','af-10th','af-higher','af-hpct','af-prevcol'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
-  updatePendBadge();
+  saveToLS();updatePendBadge();
   toast('✅ Application #'+id+' Submitted! JRH team जल्द contact करेगी।');
   gotoFStep(0);
 }
@@ -1111,10 +1142,10 @@ function renderApps(){
 function filterApps(f,el){D.appFilter=f;document.querySelectorAll('.afb').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderApps()}
 function chgStatus(id,status){
   const a=D.applications.find(x=>x.id===id);if(!a)return;
-  a.status=status;updatePendBadge();renderApps();
+  a.status=status;saveToLS();updatePendBadge();renderApps();
   toast({approved:'✅ Approved! ('+id+')',cancelled:'❌ Cancelled. ('+id+')',pending:'⏳ Pending mein dala. ('+id+')'}[status]);
 }
-function delApp(id){if(!confirm('Delete karein?'))return;const i=D.applications.findIndex(x=>x.id===id);if(i>=0)D.applications.splice(i,1);updatePendBadge();renderApps();toast('🗑️ Deleted.')}
+function delApp(id){if(!confirm('Delete karein?'))return;const i=D.applications.findIndex(x=>x.id===id);if(i>=0)D.applications.splice(i,1);saveToLS();updatePendBadge();renderApps();toast('🗑️ Deleted.')}
 function toggleFull(id){document.getElementById('full-'+id)?.classList.toggle('open')}
 function updatePendBadge(){
   const n=D.applications.filter(a=>a.status==='pending').length;
@@ -1149,7 +1180,7 @@ function renderLearnEdit(){
     </div>`).join('');
 }
 function addLearn(){D.learn.push({icon:'📌',title:'New Subject',desc:'Description here'});renderLearnEdit()}
-function saveLearn(){renderHome();toast('✅ Curriculum Saved!')}
+function saveLearn(){saveToLS();renderHome();toast('✅ Curriculum Saved!')}
 
 // ============================================================
 // BENEFITS EDIT
@@ -1168,7 +1199,7 @@ function renderBenEdit(){
     </div>`).join('');
 }
 function addBenefit(){D.benefits.push({icon:'⭐',title:'New Benefit',desc:'Description',isFranchise:false});renderBenEdit()}
-function saveBenefits(){renderHome();toast('✅ Benefits Saved!')}
+function saveBenefits(){saveToLS();renderHome();toast('✅ Benefits Saved!')}
 
 // ============================================================
 // GALLERY EDIT
@@ -1183,7 +1214,7 @@ function renderGalEdit(){
     </div>`).join('');
 }
 function addGal(){D.gallery.push({emoji:'📸',cap:'New Photo'});renderGalEdit()}
-function saveGal(){renderHome();toast('✅ Gallery Saved!')}
+function saveGal(){saveToLS();renderHome();toast('✅ Gallery Saved!')}
 
 // ============================================================
 // NOTICES EDIT
@@ -1201,8 +1232,8 @@ function renderNoticeEdit(){
     </div>`).join('');
 }
 function cycNotice(i){const c=D.notices[i].icon;D.notices[i].icon=notIcons[(notIcons.indexOf(c)+1)%notIcons.length];renderNoticeEdit()}
-function addNotice(){D.notices.unshift({icon:'📢',title:'New Notice',date:'2024',isNew:true});renderNoticeEdit()}
-function saveNotices(){renderHome();toast('✅ Notices Saved!')}
+function addNotice(){D.notices.unshift({icon:'📢',title:'New Notice',date:'2026',isNew:true});renderNoticeEdit()}
+function saveNotices(){saveToLS();renderHome();toast('✅ Notices Saved!')}
 
 // ============================================================
 // SAVE FUNCTIONS
@@ -1210,28 +1241,43 @@ function saveNotices(){renderHome();toast('✅ Notices Saved!')}
 function saveBrand(){
   D.name=gv('eb-name')||D.name;D.sub=gv('eb-sub')||D.sub;D.loc=gv('eb-loc')||D.loc;
   D.tag=gv('eb-tag')||D.tag;D.ticker=gv('eb-ticker')||D.ticker;D.logo=pickedLogo;
-  renderHome();toast('✅ Branding Saved!');
+  saveToLS();renderHome();toast('✅ Branding Saved!');
 }
 function saveHero(){
   D.heroH1=gv('eh-h1')||D.heroH1;D.heroCourse=gv('eh-course')||D.heroCourse;
   D.heroOrg=gv('eh-org')||D.heroOrg;D.heroLoc=gv('eh-loc')||D.heroLoc;
   D.elig=gv('eh-elig')||D.elig;D.dur=gv('eh-dur')||D.dur;D.mode=gv('eh-mode')||D.mode;D.fees=gv('eh-fees')||D.fees;
-  renderHome();toast('✅ Hero Info Saved!');
+  saveToLS();renderHome();toast('✅ Hero Info Saved!');
 }
 function saveContact(){
   D.phone=gv('ec-phone')||D.phone;D.addr=gv('ec-addr')||D.addr;
   D.hours=gv('ec-hours')||D.hours;D.wa=gv('ec-wa')||D.wa;D.email=gv('ec-email')||D.email;
-  renderHome();toast('✅ Contact Saved!');
+  saveToLS();renderHome();toast('✅ Contact Saved!');
 }
 function chgPass(){
   const p1=gv('np1'),p2=gv('np2');
   if(!p1)return toast('❌ Password empty!');
   if(p1!==p2)return toast('❌ Passwords match nahi!');
-  D.adminPass=p1;sv('np1','');sv('np2','');toast('✅ Password Changed!');
+  D.adminPass=p1;sv('np1','');sv('np2','');saveToLS();toast('✅ Password Changed!');
 }
 function pickLogo(el,e){pickedLogo=e;document.querySelectorAll('.lopt').forEach(x=>x.classList.remove('sel'));el.classList.add('sel')}
 function cycArr(arr,i,field,list){const c=D[arr][i][field];D[arr][i][field]=list[(list.indexOf(c)+1)%list.length];({learn:renderLearnEdit,benefits:renderBenEdit,gallery:renderGalEdit})[arr]?.()}
 function togSec(id){document.getElementById(id).classList.toggle('open')}
+
+// ============================================================
+// SECRET ADMIN ACCESS — footer logo pe 5 baar tap karo
+// ============================================================
+let _sTaps=0,_sTapTimer=null;
+function secretTap(){
+  _sTaps++;
+  clearTimeout(_sTapTimer);
+  if(_sTaps>=5){
+    _sTaps=0;
+    goAdmin();
+    return;
+  }
+  _sTapTimer=setTimeout(()=>{_sTaps=0;},3000);
+}
 
 // ============================================================
 // NAV
