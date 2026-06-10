@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>JRH Institute & Research Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --g1:#1B5E20;--g2:#2E7D32;--g3:#388E3C;--g4:#43A047;--g5:#81C784;
+  --gold:#C8960C;--gold2:#E8B422;--gold3:#FDD835;
+  --red:#8B1A1A;--red2:#B71C1C;--red3:#E53935;
+  --cream:#F8F5EE;--dark:#080F09;--dark2:#0C180D;--dark3:#122014;
+  --white:#FFFDF5;
+  --ch:'Cinzel',serif;--cb:'Cormorant Garamond',serif;--cd:'Noto Sans Devanagari',sans-serif;
+}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--dark);font-family:var(--cb);position:fixed;inset:0}
+
+/* ===== CANVAS BG ===== */
+#bgc{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
+
+/* ===== FLOATING LEAVES ===== */
+.fp-wrap{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.fp{position:absolute;opacity:0;animation:fpUp linear infinite}
+@keyframes fpUp{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:0.06}90%{opacity:0.06}100%{transform:translateY(-20vh) rotate(540deg);opacity:0}}
+
+/* ===== VIEWS ===== */
+.view{position:fixed;inset:0;width:100vw;height:100vh;display:none;flex-direction:column;z-index:10;overflow:hidden}
+.view.active{display:flex}
+
+/* ===== SPLASH ===== */
+#splash{background:var(--dark);align-items:center;justify-content:center;z-index:100;overflow:hidden}
+.sp-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(27,94,32,0.45),var(--dark))}
+.sp-pillars{position:absolute;bottom:0;left:0;right:0;height:25%;display:flex;justify-content:center;gap:18px;align-items:flex-end;opacity:0.04}
+.sp-pillar{background:linear-gradient(to top,var(--g3),transparent);border-radius:3px 3px 0 0;width:16px}
+.sp-center{position:relative;z-index:2;text-align:center;padding:0 20px}
+.sp-emblem{position:relative;width:176px;height:176px;margin:0 auto 28px}
+.sp-c1,.sp-c2,.sp-c3{position:absolute;border-radius:50%;border:1.5px solid}
+.sp-c1{inset:0;border-color:rgba(200,150,12,0.7);animation:rot1 4s linear infinite}
+.sp-c2{inset:12px;border-color:rgba(67,160,71,0.4);border-style:dashed;animation:rot1 7s linear infinite reverse}
+.sp-c3{inset:22px;border-color:rgba(200,150,12,0.18);animation:rot1 12s linear infinite}
+.sp-core{position:absolute;inset:34px;border-radius:50%;background:radial-gradient(circle,var(--g2),var(--g1));display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(46,125,50,0.5),inset 0 0 20px rgba(8,15,9,0.6);animation:corePulse 2.5s ease-in-out infinite}
+.sp-icon{font-size:46px}
+@keyframes rot1{to{transform:rotate(360deg)}}
+@keyframes corePulse{0%,100%{box-shadow:0 0 30px rgba(46,125,50,0.4)}50%{box-shadow:0 0 70px rgba(200,150,12,0.5)}}
+.sp-title{font-family:var(--ch);font-size:clamp(18px,5vw,32px);color:var(--gold2);letter-spacing:2px;animation:fu 1s ease 0.5s both;line-height:1.2;font-weight:900}
+.sp-sub{font-family:var(--cb);font-size:clamp(11px,2.5vw,15px);color:rgba(255,253,245,0.5);letter-spacing:4px;text-transform:uppercase;margin-top:7px;animation:fu 1s ease 0.8s both}
+.sp-loc{font-family:var(--cb);font-size:13px;color:rgba(200,150,12,0.65);letter-spacing:2px;margin-top:10px;animation:fu 1s ease 1.1s both;font-style:italic}
+.sp-bar{width:220px;height:2px;background:rgba(200,150,12,0.1);margin:30px auto 0;border-radius:2px;overflow:hidden}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--g3),var(--gold2),var(--g5));width:0;animation:barFill 3s ease 1.3s forwards}
+@keyframes barFill{to{width:100%}}
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.sp-ornament{position:absolute;top:16px;left:0;right:0;text-align:center;font-family:var(--ch);font-size:10px;color:rgba(200,150,12,0.18);letter-spacing:10px}
+
+/* ===== TOPBAR ===== */
+.topbar{position:fixed;top:0;left:0;right:0;width:100vw;height:60px;z-index:60;background:rgba(8,15,9,0.97);backdrop-filter:blur(18px);border-bottom:1px solid rgba(200,150,12,0.2);display:flex;align-items:center;justify-content:space-between;padding:0 14px}
+.tb-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.tb-seal{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--g2),var(--g3));border:1.5px solid rgba(200,150,12,0.5);display:flex;align-items:center;justify-content:center;font-size:18px;animation:sealGlow 3s ease-in-out infinite;flex-shrink:0;position:relative}
+.tb-seal::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px dashed rgba(200,150,12,0.18);animation:rot1 6s linear infinite}
+@keyframes sealGlow{0%,100%{box-shadow:0 0 8px rgba(46,125,50,0.4)}50%{box-shadow:0 0 22px rgba(200,150,12,0.65)}}
+.tb-name{font-family:var(--ch);font-size:13px;color:var(--gold2);letter-spacing:0.5px;line-height:1.2;font-weight:900}
+.tb-name-sub{font-family:var(--cb);font-size:9px;color:rgba(255,253,245,0.38);letter-spacing:1.5px;text-transform:uppercase;display:block}
+.tb-btns{display:flex;gap:7px}
+.btn-sm{padding:7px 14px;border-radius:6px;font-family:var(--ch);font-size:11px;font-weight:700;cursor:pointer;border:none;transition:all 0.3s;letter-spacing:0.5px}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark)}
+.btn-gold:hover{transform:scale(1.05);box-shadow:0 3px 14px rgba(200,150,12,0.5)}
+.btn-ghost{background:transparent;color:var(--g5);border:1px solid rgba(67,160,71,0.28)}
+.btn-ghost:hover{border-color:var(--g5);background:rgba(67,160,71,0.08)}
+@media(max-width:420px){.btn-ghost{display:none}}
+
+/* ===== TICKER ===== */
+.ticker-wrap{position:fixed;top:60px;left:0;right:0;width:100vw;height:26px;z-index:55;background:linear-gradient(90deg,var(--g1),var(--g2),var(--g1));border-bottom:1px solid rgba(200,150,12,0.25);overflow:hidden;display:flex;align-items:center}
+.ticker-txt{display:inline-block;white-space:nowrap;animation:tickAnim 30s linear infinite;font-family:var(--cb);font-size:11px;color:var(--gold3);letter-spacing:2px;padding-left:100%}
+@keyframes tickAnim{from{transform:translateX(0)}to{transform:translateX(-200%)}}
+
+/* ===== HOME ===== */
+#home{overflow:hidden;padding-top:86px}
+.hscroll{overflow-y:auto;height:calc(100vh - 86px);width:100vw;-webkit-overflow-scrolling:touch;padding-bottom:66px}
+.hscroll::-webkit-scrollbar{width:3px}
+.hscroll::-webkit-scrollbar-thumb{background:var(--g3);border-radius:2px}
+
+/* ===== HERO ===== */
+.hero{min-height:calc(100vh - 86px);display:flex;align-items:center;justify-content:center;text-align:center;padding:36px 16px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(27,94,32,0.3),transparent),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(200,150,12,0.06),transparent)}
+.hero-wrap{max-width:860px;width:100%;position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 20px;border:1px solid rgba(200,150,12,0.38);border-radius:50px;font-family:var(--ch);font-size:10px;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;background:rgba(200,150,12,0.05);animation:fu 1s ease both}
+.hero-seal-big{width:114px;height:114px;border-radius:50%;background:radial-gradient(circle,var(--g3),var(--g1));border:2.5px solid rgba(200,150,12,0.5);display:flex;align-items:center;justify-content:center;font-size:50px;margin:0 auto 22px;position:relative;animation:corePulse 3s ease-in-out infinite}
+.hero-seal-big::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(200,150,12,0.18);animation:rot1 7s linear infinite}
+.hero-seal-big::after{content:'';position:absolute;inset:-15px;border-radius:50%;border:1px dashed rgba(67,160,71,0.12);animation:rot1 12s linear infinite reverse}
+.hero-course-tag{font-family:var(--cb);font-size:14px;color:var(--g5);letter-spacing:5px;text-transform:uppercase;margin-bottom:6px;animation:fu 1s ease 0.1s both;font-style:italic}
+.hero-h1{font-family:var(--ch);font-size:clamp(26px,7vw,65px);color:var(--white);line-height:1.05;margin-bottom:10px;animation:fu 1s ease 0.2s both;font-weight:900}
+.hero-h1 .gold-grad{background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block}
+.hero-org{font-family:var(--ch);font-size:clamp(13px,3vw,20px);color:var(--gold2);letter-spacing:2px;margin-bottom:5px;animation:fu 1s ease 0.3s both}
+.hero-loc{font-family:var(--cb);font-size:13px;color:rgba(255,253,245,0.45);margin-bottom:22px;animation:fu 1s ease 0.4s both;display:flex;align-items:center;justify-content:center;gap:5px}
+/* ADMISSIONS BANNER */
+.adm-banner{background:linear-gradient(135deg,var(--red),var(--red2));border-radius:10px;padding:14px 22px;margin-bottom:24px;position:relative;overflow:hidden;box-shadow:0 6px 28px rgba(139,26,26,0.55);animation:fu 1s ease 0.5s both}
+.adm-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent)}
+.adm-banner-inner{font-family:var(--ch);font-size:clamp(16px,4vw,25px);font-weight:900;color:white;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.adm-open{color:var(--gold3);animation:blinkOpen 1.5s ease-in-out infinite}
+@keyframes blinkOpen{0%,100%{opacity:1}50%{opacity:0.55}}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:fu 1s ease 0.6s both}
+.hbtn{padding:13px 28px;border-radius:9px;font-family:var(--ch);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.3s;border:none;letter-spacing:1.5px;text-transform:uppercase}
+.hbtn-green{background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--gold2);border:1px solid rgba(200,150,12,0.35);box-shadow:0 4px 18px rgba(27,94,32,0.5)}
+.hbtn-green:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(27,94,32,0.65)}
+.hbtn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);font-weight:900}
+.hbtn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,150,12,0.5)}
+/* INFO BOXES */
+.info-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:34px;animation:fu 1s ease 0.8s both}
+@media(max-width:500px){.info-row{grid-template-columns:repeat(2,1fr)}}
+.info-box{background:rgba(27,94,32,0.2);border:1px solid rgba(67,160,71,0.18);border-radius:12px;padding:14px 10px;text-align:center;transition:all 0.3s;cursor:pointer}
+.info-box:hover{border-color:rgba(200,150,12,0.4);background:rgba(200,150,12,0.07);transform:translateY(-3px)}
+.ib-icon{font-size:24px;margin-bottom:6px;display:block;animation:ibFloat 3s ease-in-out infinite}
+.info-box:nth-child(2) .ib-icon{animation-delay:.4s}
+.info-box:nth-child(3) .ib-icon{animation-delay:.8s}
+.info-box:nth-child(4) .ib-icon{animation-delay:1.2s}
+@keyframes ibFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.ib-label{font-family:var(--ch);font-size:8px;color:var(--g5);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:6px}
+.ib-val{font-family:var(--ch);font-size:clamp(12px,3vw,19px);color:var(--white);font-weight:900}
+.ib-sub{font-family:var(--cb);font-size:10px;color:rgba(255,253,245,0.4);margin-top:3px;line-height:1.4}
+.ib-price{color:var(--red3)!important;font-size:clamp(17px,4vw,24px)!important}
+.scroll-cue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;animation:fu 1s ease 2.5s both}
+.sc-ring{width:18px;height:28px;border:1px solid rgba(200,150,12,0.3);border-radius:9px;display:flex;justify-content:center;padding-top:4px}
+.sc-dot{width:3px;height:8px;background:var(--gold);border-radius:2px;animation:scDot 1.5s ease-in-out infinite}
+@keyframes scDot{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(7px);opacity:0.3}}
+
+/* ===== SECTIONS ===== */
+.sec{padding:72px 16px;max-width:1100px;margin:0 auto}
+.sec-band{background:linear-gradient(135deg,rgba(27,94,32,0.18),rgba(8,15,9,0.5));border-top:1px solid rgba(67,160,71,0.07);border-bottom:1px solid rgba(67,160,71,0.07)}
+.stag{font-family:var(--ch);font-size:10px;color:var(--g5);letter-spacing:5px;text-transform:uppercase;display:block;margin-bottom:10px}
+.sh2{font-family:var(--ch);font-size:clamp(22px,4vw,40px);color:var(--white);margin-bottom:10px;font-weight:900}
+.sh2 em{color:var(--gold2);font-style:normal}
+.sdiv{width:55px;height:2px;background:linear-gradient(90deg,var(--g3),transparent);margin:0 0 34px;border-radius:2px}
+
+/* ===== LEARN GRID ===== */
+.learn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.learn-card{background:linear-gradient(135deg,rgba(27,94,32,0.3),rgba(8,15,9,0.7));border:1px solid rgba(67,160,71,0.14);border-radius:14px;padding:26px;transition:all 0.4s;cursor:pointer;position:relative;overflow:hidden}
+.learn-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g3),transparent);transform:scaleX(0);transition:transform 0.4s}
+.learn-card:hover::before{transform:scaleX(1)}
+.learn-card:hover{transform:translateY(-5px);border-color:rgba(200,150,12,0.35);box-shadow:0 16px 36px rgba(0,0,0,0.55)}
+.lc-icon{font-size:36px;margin-bottom:14px;display:block;animation:ibFloat 3s ease-in-out infinite}
+.learn-card:nth-child(2) .lc-icon{animation-delay:.5s}
+.learn-card:nth-child(3) .lc-icon{animation-delay:1s}
+.learn-card:nth-child(4) .lc-icon{animation-delay:1.5s}
+.lc-title{font-family:var(--ch);font-size:17px;color:var(--white);margin-bottom:9px;font-weight:700}
+.lc-desc{font-family:var(--cb);font-size:14px;color:rgba(255,253,245,0.52);line-height:1.7}
+
+/* ===== BENEFITS ===== */
+.benefits-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.benefits-grid{grid-template-columns:1fr}}
+.ben-card{background:linear-gradient(135deg,rgba(27,94,32,0.3),rgba(8,15,9,0.75));border:1px solid rgba(67,160,71,0.14);border-radius:14px;padding:22px;display:flex;gap:14px;align-items:flex-start;transition:all 0.4s}
+.ben-card:hover{border-color:rgba(200,150,12,0.38);transform:translateX(4px)}
+.ben-icon{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--g2),var(--g1));border:1px solid rgba(200,150,12,0.25);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;transition:all 0.3s}
+.ben-card:hover .ben-icon{border-color:var(--gold);box-shadow:0 0 14px rgba(200,150,12,0.25)}
+.ben-title{font-family:var(--ch);font-size:15px;color:var(--white);margin-bottom:6px;font-weight:700}
+.ben-desc{font-family:var(--cb);font-size:13px;color:rgba(255,253,245,0.5);line-height:1.6}
+.ben-card.franchise{background:linear-gradient(135deg,rgba(200,150,12,0.1),rgba(8,15,9,0.85));border-color:rgba(200,150,12,0.25)}
+.ben-card.franchise .ben-icon{background:linear-gradient(135deg,var(--gold),var(--gold2))}
+.ben-card.franchise .ben-title{color:var(--gold2)}
+/* PLACEMENT HIGHLIGHT BOX */
+.placement-box{background:linear-gradient(135deg,rgba(27,94,32,0.4),rgba(8,15,9,0.85));border:1px solid rgba(200,150,12,0.25);border-radius:16px;padding:26px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden}
+.placement-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(200,150,12,0.07),transparent);pointer-events:none}
+.pb-badge{display:inline-block;padding:5px 18px;background:linear-gradient(135deg,var(--g1),var(--g2));border:1px solid rgba(200,150,12,0.3);border-radius:50px;font-family:var(--ch);font-size:9px;color:var(--gold2);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+.pb-title{font-family:var(--ch);font-size:clamp(18px,4vw,26px);color:var(--white);margin-bottom:8px;font-weight:900}
+.pb-title span{color:var(--gold2)}
+.pb-org{font-family:var(--ch);font-size:15px;color:var(--g5);letter-spacing:2px;margin-bottom:6px}
+.pb-sub{font-family:var(--cb);font-size:14px;color:rgba(255,253,245,0.5);font-style:italic}
+
+/* ===== AI CHAT ===== */
+.chat-wrap{max-width:720px;margin:0 auto;background:linear-gradient(135deg,rgba(27,94,32,0.15),rgba(8,15,9,0.9));border:1px solid rgba(67,160,71,0.2);border-radius:18px;overflow:hidden}
+.chat-hdr{background:linear-gradient(135deg,var(--g1),var(--g2));padding:14px 18px;display:flex;align-items:center;gap:12px}
+.chat-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--gold));display:flex;align-items:center;justify-content:center;font-size:20px;animation:sealGlow 2.5s ease-in-out infinite;flex-shrink:0}
+.chat-av-name{font-family:var(--ch);font-size:14px;color:var(--white);font-weight:700}
+.chat-av-status{font-family:var(--cb);font-size:11px;color:var(--g5);display:flex;align-items:center;gap:4px}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--g5);animation:sDotBlink 2s ease-in-out infinite}
+@keyframes sDotBlink{0%,100%{opacity:1}50%{opacity:0.35}}
+.qchips{padding:10px 14px;display:flex;gap:7px;flex-wrap:wrap;border-top:1px solid rgba(67,160,71,0.1)}
+.qchip{padding:6px 12px;background:rgba(27,94,32,0.3);border:1px solid rgba(67,160,71,0.2);border-radius:50px;font-family:var(--cb);font-size:11px;color:var(--g5);cursor:pointer;transition:all 0.3s;letter-spacing:0.5px}
+.qchip:hover{background:rgba(27,94,32,0.55);color:var(--white);border-color:var(--g4)}
+.chat-msgs{height:280px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px}
+.chat-msgs::-webkit-scrollbar{width:2px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--g3)}
+.msg{max-width:82%;padding:11px 15px;border-radius:12px;font-family:var(--cb);font-size:13px;line-height:1.65}
+.msg-bot{background:linear-gradient(135deg,rgba(27,94,32,0.5),rgba(46,125,50,0.3));border:1px solid rgba(67,160,71,0.2);color:var(--white);align-self:flex-start;border-radius:4px 12px 12px 12px}
+.msg-user{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);align-self:flex-end;border-radius:12px 4px 12px 12px;font-weight:600}
+.typing{display:flex;gap:4px;padding:3px 0}
+.td{width:7px;height:7px;border-radius:50%;background:var(--g5);animation:tdBounce 1.4s ease-in-out infinite}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes tdBounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+.chat-input-row{padding:12px 14px;border-top:1px solid rgba(67,160,71,0.1);display:flex;gap:10px}
+.chat-input{flex:1;padding:10px 13px;background:rgba(255,255,255,0.04);border:1px solid rgba(67,160,71,0.18);border-radius:8px;color:var(--white);font-family:var(--cb);font-size:13px;outline:none;transition:all 0.3s}
+.chat-input:focus{border-color:var(--g4);background:rgba(67,160,71,0.05)}
+.chat-send{width:42px;height:42px;border-radius:9px;background:linear-gradient(135deg,var(--g2),var(--g3));border:none;color:white;font-size:17px;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chat-send:hover{box-shadow:0 3px 12px rgba(27,94,32,0.5);transform:scale(1.06)}
+
+/* ===== GALLERY ===== */
+.gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+.gal-item{aspect-ratio:1;border-radius:12px;background:linear-gradient(135deg,var(--dark2),var(--g1));border:1px solid rgba(67,160,71,0.12);display:flex;align-items:center;justify-content:center;font-size:44px;cursor:pointer;transition:all 0.4s;position:relative;overflow:hidden}
+.gal-item:hover{transform:scale(1.06);border-color:var(--gold);box-shadow:0 8px 24px rgba(200,150,12,0.2)}
+.gal-ov{position:absolute;inset:0;background:rgba(200,150,12,0.08);opacity:0;transition:opacity 0.3s;display:flex;align-items:center;justify-content:center;font-size:22px}
+.gal-item:hover .gal-ov{opacity:1}
+.gal-cap{position:absolute;bottom:0;left:0;right:0;padding:7px;background:linear-gradient(transparent,rgba(8,15,9,0.92));font-family:var(--cb);font-size:11px;color:var(--gold3);text-align:center;letter-spacing:1px}
+
+/* ===== NOTICES ===== */
+.notice-list{display:flex;flex-direction:column;gap:10px}
+.ni{background:linear-gradient(135deg,rgba(27,94,32,0.25),rgba(8,15,9,0.75));border:1px solid rgba(67,160,71,0.12);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:12px;transition:all 0.3s;cursor:pointer}
+.ni:hover{border-color:rgba(200,150,12,0.35);transform:translateX(4px)}
+.ni-icon{font-size:20px;flex-shrink:0}
+.ni-title{font-family:var(--ch);font-size:14px;color:var(--white);margin-bottom:2px;font-weight:700}
+.ni-date{font-family:var(--cb);font-size:11px;color:rgba(255,253,245,0.35);letter-spacing:1px}
+.ni-new{padding:2px 9px;background:linear-gradient(135deg,var(--red),var(--red2));border-radius:50px;font-family:var(--ch);font-size:8px;color:white;letter-spacing:1.5px;flex-shrink:0;animation:blinkOpen 2s ease-in-out infinite}
+
+/* ===== ADMISSION FORM ===== */
+.adm-wrap{max-width:720px;margin:0 auto;background:linear-gradient(135deg,rgba(27,94,32,0.2),rgba(8,15,9,0.9));border:1px solid rgba(67,160,71,0.2);border-radius:18px;padding:30px;position:relative;overflow:hidden}
+.adm-wrap::before{content:'';position:absolute;top:-80px;right:-80px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(200,150,12,0.05),transparent);pointer-events:none}
+.step-bar{display:flex;margin-bottom:24px;border-radius:9px;overflow:hidden;border:1px solid rgba(67,160,71,0.16)}
+.step{flex:1;padding:10px 6px;text-align:center;font-family:var(--ch);font-size:10px;letter-spacing:0.5px;cursor:pointer;transition:all 0.3s;color:rgba(255,253,245,0.32);border-right:1px solid rgba(67,160,71,0.1)}
+.step:last-child{border-right:none}
+.step.active{background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--gold2)}
+.step-n{display:block;font-size:15px;margin-bottom:2px}
+.fpage{display:none}
+.fpage.active{display:block}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:13px}
+@media(max-width:520px){.frow{grid-template-columns:1fr}}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:0}
+.fl{font-family:var(--ch);font-size:9px;color:rgba(200,150,12,0.75);letter-spacing:2px;text-transform:uppercase}
+.fi,.fsel,.fta{width:100%;padding:11px 13px;background:rgba(255,255,255,0.04);border:1px solid rgba(67,160,71,0.16);border-radius:8px;color:var(--white);font-family:var(--cb);font-size:14px;outline:none;transition:all 0.3s}
+.fi:focus,.fsel:focus,.fta:focus{border-color:var(--g4);background:rgba(67,160,71,0.05);box-shadow:0 0 14px rgba(67,160,71,0.1)}
+.fsel option{background:var(--dark2);color:var(--white)}
+.fta{resize:vertical;min-height:90px}
+.fbtns{display:flex;gap:12px;margin-top:16px}
+.fprev-btn{padding:11px 20px;background:transparent;border:1px solid rgba(67,160,71,0.28);color:var(--g5);border-radius:8px;font-family:var(--ch);font-size:11px;letter-spacing:1px;cursor:pointer;transition:all 0.3s}
+.fprev-btn:hover{background:rgba(67,160,71,0.08)}
+.fnext-btn{flex:1;padding:11px;background:linear-gradient(135deg,var(--g1),var(--g2));color:white;border-radius:8px;font-family:var(--ch);font-size:12px;letter-spacing:2px;cursor:pointer;border:1px solid rgba(200,150,12,0.3);font-weight:700;transition:all 0.3s;text-transform:uppercase}
+.fnext-btn:hover{box-shadow:0 5px 18px rgba(27,94,32,0.5);transform:translateY(-1px)}
+
+/* ===== CONTACT ===== */
+.contact-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:22px}
+@media(max-width:680px){.contact-layout{grid-template-columns:1fr}}
+.contact-cards{display:flex;flex-direction:column;gap:12px}
+.cc{background:linear-gradient(135deg,rgba(27,94,32,0.28),rgba(8,15,9,0.75));border:1px solid rgba(67,160,71,0.12);border-radius:12px;padding:18px;transition:all 0.3s;cursor:pointer}
+.cc:hover{border-color:rgba(200,150,12,0.35);transform:translateX(3px)}
+.cc-label{font-family:var(--ch);font-size:9px;color:var(--g5);letter-spacing:2.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.cc-val{font-family:var(--cb);font-size:15px;color:var(--white);line-height:1.7}
+.phone-big{font-family:var(--ch);font-size:22px;color:var(--gold2);font-weight:900;letter-spacing:1px}
+.call-now-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--g1),var(--g2));border:1px solid rgba(200,150,12,0.3);border-radius:10px;color:var(--gold2);font-family:var(--ch);font-size:14px;letter-spacing:2px;cursor:pointer;text-align:center;transition:all 0.3s;text-transform:uppercase;font-weight:900;margin-top:8px;display:block;text-decoration:none}
+.call-now-btn:hover{box-shadow:0 6px 22px rgba(27,94,32,0.55);transform:translateY(-1px)}
+.form-box{background:linear-gradient(135deg,rgba(27,94,32,0.18),rgba(8,15,9,0.85));border:1px solid rgba(67,160,71,0.14);border-radius:14px;padding:24px}
+
+/* ===== FOOTER ===== */
+.footer{background:rgba(8,15,9,0.98);border-top:1px solid rgba(200,150,12,0.18);padding:34px 16px;text-align:center}
+.ft-logo{font-family:var(--ch);font-size:20px;color:var(--gold2);margin-bottom:5px;font-weight:900}
+.ft-sub{font-family:var(--cb);font-size:12px;color:rgba(255,253,245,0.3);letter-spacing:2px;margin-top:4px}
+.ft-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:16px 0;padding:14px 0;border-top:1px solid rgba(200,150,12,0.07);border-bottom:1px solid rgba(200,150,12,0.07)}
+.ft-link{font-family:var(--ch);font-size:9px;color:rgba(200,150,12,0.45);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:color 0.3s}
+.ft-link:hover{color:var(--gold2)}
+
+/* ===== BOTTOM NAV ===== */
+.bnav{position:fixed;bottom:0;left:0;right:0;width:100vw;height:62px;z-index:55;background:rgba(8,15,9,0.98);backdrop-filter:blur(18px);border-top:1px solid rgba(200,150,12,0.18);display:grid;grid-template-columns:repeat(6,1fr)}
+.bn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;padding:5px;transition:all 0.3s;position:relative}
+.bn.active .bni,.bn.active .bnl{color:var(--gold2)}
+.bn.active::after{content:'';position:absolute;top:0;left:15%;right:15%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:2px}
+.bni{font-size:18px;color:rgba(255,253,245,0.25);transition:all 0.3s}
+.bnl{font-family:var(--ch);font-size:7.5px;color:rgba(255,253,245,0.25);letter-spacing:0.5px;text-transform:uppercase;transition:all 0.3s}
+.bn:hover .bni,.bn:hover .bnl{color:rgba(200,150,12,0.65)}
+
+/* ===== ADMIN ===== */
+#admin{background:var(--dark2);overflow-y:auto;padding-top:60px;width:100vw;height:100vh}
+#admin::-webkit-scrollbar{width:3px}
+#admin::-webkit-scrollbar-thumb{background:var(--g3);border-radius:2px}
+.adm-login{position:absolute;inset:0;background:var(--dark2);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+.login-card{background:linear-gradient(135deg,rgba(27,94,32,0.4),rgba(8,15,9,0.98));border:1px solid rgba(200,150,12,0.2);border-radius:18px;padding:36px;max-width:360px;width:100%;text-align:center}
+.lci{font-size:50px;display:block;margin-bottom:16px;animation:ibFloat 3s ease-in-out infinite}
+.lct{font-family:var(--ch);font-size:24px;color:var(--gold2);margin-bottom:5px;font-weight:900}
+.lcs{font-family:var(--cb);font-size:13px;color:rgba(255,253,245,0.38);margin-bottom:24px;letter-spacing:1px}
+.lce{color:#FF7070;font-family:var(--cb);font-size:12px;margin-top:10px;display:none}
+.adm-bar{position:fixed;top:0;left:0;right:0;width:100vw;height:60px;z-index:65;background:rgba(8,15,9,0.98);border-bottom:1px solid rgba(200,150,12,0.2);display:flex;align-items:center;justify-content:space-between;padding:0 14px}
+.adm-content{padding:14px;max-width:900px;margin:0 auto;padding-bottom:26px}
+.back-home-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--g1),var(--g2));border:1.5px solid rgba(200,150,12,0.35);border-radius:12px;color:var(--gold2);font-family:var(--ch);font-size:13px;letter-spacing:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.3s;margin-bottom:16px;text-transform:uppercase;font-weight:900}
+.back-home-btn:hover{box-shadow:0 5px 22px rgba(27,94,32,0.55);border-color:var(--gold);transform:translateY(-1px)}
+.adm-hdr{background:linear-gradient(135deg,rgba(27,94,32,0.45),rgba(8,15,9,0.95));border:1px solid rgba(200,150,12,0.18);border-radius:13px;padding:18px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.adm-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--g2),var(--gold));display:flex;align-items:center;justify-content:center;font-size:20px;animation:sealGlow 2.5s ease-in-out infinite;flex-shrink:0}
+.asec{background:linear-gradient(135deg,rgba(27,94,32,0.18),rgba(8,15,9,0.9));border:1px solid rgba(67,160,71,0.1);border-radius:13px;margin-bottom:12px;overflow:hidden}
+.asec-h{padding:14px 18px;background:rgba(67,160,71,0.04);border-bottom:1px solid rgba(67,160,71,0.07);display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s}
+.asec-h:hover{background:rgba(67,160,71,0.08)}
+.asec-t{font-family:var(--ch);font-size:14px;color:var(--gold2);display:flex;align-items:center;gap:8px;font-weight:700;position:relative}
+.asec-arr{font-size:13px;color:var(--gold);transition:transform 0.3s}
+.asec.open .asec-arr{transform:rotate(180deg)}
+.asec-body{padding:18px;display:none}
+.asec.open .asec-body{display:block}
+.er{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:500px){.er{grid-template-columns:1fr}}
+.eg{display:flex;flex-direction:column;gap:5px}
+.el{font-family:var(--ch);font-size:9px;color:rgba(200,150,12,0.72);letter-spacing:2px;text-transform:uppercase}
+.ei,.eta,.esel{padding:10px 13px;background:rgba(255,255,255,0.04);border:1px solid rgba(67,160,71,0.14);border-radius:8px;color:var(--white);font-family:var(--cb);font-size:14px;outline:none;transition:all 0.3s;width:100%}
+.ei:focus,.eta:focus,.esel:focus{border-color:var(--g4);background:rgba(67,160,71,0.04)}
+.eta{resize:vertical;min-height:65px}
+.esel option{background:var(--dark2);color:var(--white)}
+.sbtn{padding:10px 22px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--gold2);font-family:var(--ch);font-size:11px;letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(200,150,12,0.28);border-radius:8px;cursor:pointer;transition:all 0.3s;margin-top:10px;font-weight:900}
+.sbtn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(27,94,32,0.45)}
+.abtn{padding:8px 16px;background:transparent;color:var(--g5);border:1px solid rgba(67,160,71,0.25);border-radius:8px;cursor:pointer;font-family:var(--cb);font-size:12px;transition:all 0.3s;margin-bottom:12px;letter-spacing:0.5px}
+.abtn:hover{background:rgba(67,160,71,0.08);border-color:var(--g4)}
+.dbtn{padding:5px 11px;background:rgba(139,26,26,0.2);color:#FF8080;border:1px solid rgba(139,26,26,0.28);border-radius:6px;cursor:pointer;font-family:var(--cb);font-size:11px;transition:all 0.3s;flex-shrink:0}
+.dbtn:hover{background:rgba(139,26,26,0.42)}
+.litem{background:rgba(255,255,255,0.025);border:1px solid rgba(67,160,71,0.08);border-radius:9px;padding:13px;margin-bottom:9px;display:flex;align-items:flex-start;gap:10px}
+.litem-c{flex:1}
+.tog-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(67,160,71,0.06)}
+.tog-label{font-family:var(--cb);font-size:14px;color:var(--white)}
+.tog{position:relative;width:44px;height:22px}
+.tog input{opacity:0;width:0;height:0}
+.tog-sl{position:absolute;inset:0;background:rgba(255,255,255,0.1);border-radius:22px;cursor:pointer;transition:all 0.3s}
+.tog-sl::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:rgba(255,253,245,0.35);border-radius:50%;transition:all 0.3s}
+.tog input:checked+.tog-sl{background:var(--g3)}
+.tog input:checked+.tog-sl::before{transform:translateX(22px);background:white}
+.cyc-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));border:1.5px solid rgba(200,150,12,0.28);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:all 0.3s;flex-shrink:0}
+.cyc-btn:hover{border-color:var(--gold);box-shadow:0 0 10px rgba(200,150,12,0.2)}
+.logo-opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.lopt{font-size:26px;cursor:pointer;padding:6px;border-radius:8px;border:1px solid rgba(67,160,71,0.2);transition:all 0.2s;display:inline-block}
+.lopt:hover,.lopt.sel{background:rgba(67,160,71,0.15);border-color:var(--g4)}
+
+/* ===== APPLICATION TRACKING ===== */
+.app-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.app-stat{background:rgba(27,94,32,0.25);border:1px solid rgba(67,160,71,0.14);border-radius:11px;padding:13px;text-align:center}
+.app-stat-n{font-family:var(--ch);font-size:22px;font-weight:900;display:block;margin-bottom:2px}
+.app-stat-l{font-family:var(--cb);font-size:9px;color:rgba(255,253,245,0.38);letter-spacing:2px;text-transform:uppercase}
+.app-stat.s-total .app-stat-n{color:var(--gold2)}
+.app-stat.s-pend .app-stat-n{color:var(--gold3)}
+.app-stat.s-appr .app-stat-n{color:#5EE88A}
+.app-stat.s-canc .app-stat-n{color:#FF7070}
+.app-filter-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.afb{padding:6px 14px;border-radius:20px;font-family:var(--ch);font-size:10px;cursor:pointer;border:1px solid rgba(67,160,71,0.18);background:transparent;color:rgba(255,253,245,0.38);transition:all 0.3s;letter-spacing:0.5px}
+.afb.active{background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--gold2);border-color:transparent;font-weight:900}
+.acard{background:rgba(27,94,32,0.18);border:1px solid rgba(67,160,71,0.1);border-radius:12px;padding:15px;margin-bottom:10px;position:relative;overflow:hidden;transition:all 0.3s}
+.acard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.acard.pending::before{background:var(--gold2)}
+.acard.approved::before{background:#5EE88A}
+.acard.cancelled::before{background:#FF7070}
+.acard:hover{border-color:rgba(200,150,12,0.25);transform:translateX(3px)}
+.acard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
+.acard-name{font-family:var(--ch);font-size:15px;color:var(--white);margin-bottom:2px;font-weight:700}
+.acard-id{font-family:var(--cb);font-size:10px;color:rgba(200,150,12,0.55);letter-spacing:1.5px}
+.status-badge{padding:3px 10px;border-radius:50px;font-family:var(--ch);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0}
+.status-badge.pending{background:rgba(253,216,53,0.13);color:var(--gold3);border:1px solid rgba(253,216,53,0.28)}
+.status-badge.approved{background:rgba(94,232,138,0.1);color:#5EE88A;border:1px solid rgba(94,232,138,0.22)}
+.status-badge.cancelled{background:rgba(255,112,112,0.1);color:#FF7070;border:1px solid rgba(255,112,112,0.22)}
+.acard-dg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+@media(max-width:460px){.acard-dg{grid-template-columns:1fr}}
+.acard-d{background:rgba(255,255,255,0.025);border-radius:7px;padding:7px 10px}
+.acard-dl{font-family:var(--ch);font-size:8px;color:rgba(200,150,12,0.5);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:3px}
+.acard-dv{font-family:var(--cb);font-size:13px;color:var(--white)}
+.acard-actions{display:flex;gap:7px;flex-wrap:wrap;padding-top:10px;border-top:1px solid rgba(67,160,71,0.07)}
+.aa{padding:7px 14px;border-radius:7px;font-family:var(--ch);font-size:9px;letter-spacing:1.5px;cursor:pointer;transition:all 0.3s;border:none;text-transform:uppercase;font-weight:700}
+.aa-approve{background:rgba(27,90,40,0.75);color:#5EE88A;border:1px solid rgba(94,232,138,0.28)}
+.aa-approve:hover{box-shadow:0 3px 12px rgba(94,232,138,0.18);transform:translateY(-1px)}
+.aa-cancel{background:rgba(90,27,27,0.75);color:#FF9090;border:1px solid rgba(255,112,112,0.28)}
+.aa-cancel:hover{transform:translateY(-1px)}
+.aa-pending{background:rgba(253,216,53,0.1);color:var(--gold3);border:1px solid rgba(253,216,53,0.22)}
+.aa-view{background:rgba(255,255,255,0.05);color:rgba(255,253,245,0.55);border:1px solid rgba(255,255,255,0.08)}
+.aa-view:hover{background:rgba(255,255,255,0.09);color:var(--white)}
+.aa-del{background:rgba(90,27,27,0.28);color:#FF7070;border:1px solid rgba(139,26,26,0.22)}
+.acard-full{display:none;padding-top:10px;border-top:1px solid rgba(67,160,71,0.07);margin-top:4px}
+.acard-full.open{display:block}
+.acard-full-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+@media(max-width:460px){.acard-full-grid{grid-template-columns:1fr 1fr}}
+.note-inp{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(67,160,71,0.13);border-radius:7px;padding:8px 10px;color:var(--white);font-family:var(--cb);font-size:12px;outline:none;resize:none;min-height:50px;transition:all 0.3s;margin-top:8px}
+.note-inp:focus{border-color:var(--g4)}
+.app-empty{text-align:center;padding:30px 14px;font-family:var(--cb);font-size:14px;color:rgba(255,253,245,0.22);letter-spacing:1px}
+.notif-badge{position:absolute;top:-4px;right:-4px;width:15px;height:15px;border-radius:50%;background:var(--red2);color:white;font-family:var(--ch);font-size:8px;display:flex;align-items:center;justify-content:center;animation:blinkOpen 2s ease-in-out infinite}
+
+/* TOAST */
+.toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(16px);background:linear-gradient(135deg,var(--g1),var(--g2));color:white;padding:10px 24px;border-radius:50px;font-family:var(--ch);font-size:12px;letter-spacing:1px;opacity:0;transition:all 0.4s;z-index:9999;pointer-events:none;white-space:nowrap;font-weight:700;border:1px solid rgba(200,150,12,0.28)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* FAB */
+#admFab{position:fixed;bottom:10px;right:10px;z-index:9999;display:none;flex-direction:column;align-items:center;gap:3px}
+.fab-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));border:2px solid rgba(200,150,12,0.5);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(27,94,32,0.7),0 0 0 3px rgba(200,150,12,0.1);animation:sealGlow 2.5s ease-in-out infinite}
+.fab-lbl{font-family:var(--ch);font-size:8px;color:var(--g5);letter-spacing:1.5px;background:rgba(8,15,9,0.9);padding:2px 7px;border-radius:4px;border:1px solid rgba(67,160,71,0.22)}
+</style>
+</head>
+<body>
+<canvas id="bgc"></canvas>
+<div class="fp-wrap" id="fpWrap"></div>
+<div class="toast" id="toast"></div>
+
+<!-- SPLASH -->
+<div class="view active" id="splash">
+  <div class="sp-bg"></div>
+  <div class="sp-pillars">
+    <div class="sp-pillar" style="height:35%"></div><div class="sp-pillar" style="height:58%"></div><div class="sp-pillar" style="height:80%"></div><div class="sp-pillar" style="height:100%"></div><div class="sp-pillar" style="height:100%"></div><div class="sp-pillar" style="height:80%"></div><div class="sp-pillar" style="height:58%"></div><div class="sp-pillar" style="height:35%"></div>
+  </div>
+  <div class="sp-ornament">✦ &nbsp; NATURAL HEALING · HEALTHY LIVING &nbsp; ✦</div>
+  <div class="sp-center">
+    <div class="sp-emblem">
+      <div class="sp-c1"></div><div class="sp-c2"></div><div class="sp-c3"></div>
+      <div class="sp-core"><span class="sp-icon" id="spIcon">🌿</span></div>
+    </div>
+    <div class="sp-title" id="spTitle">JRH Institute</div>
+    <div class="sp-sub" id="spSub">& Research Centre</div>
+    <div class="sp-loc" id="spLoc">Transport Nagar, Bareilly, India</div>
+    <div class="sp-bar"><div class="sp-fill"></div></div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="view" id="home">
+  <div class="topbar">
+    <div class="tb-logo" onclick="scrollToTop()">
+      <div class="tb-seal" id="tbSeal">🌿</div>
+      <div>
+        <div class="tb-name" id="tbName">JRH Institute & Research Centre</div>
+        <span class="tb-name-sub" id="tbSub">Transport Nagar, Bareilly, India</span>
+      </div>
+    </div>
+    <div class="tb-btns">
+      <button class="btn-sm btn-ghost" onclick="gotoSec('admission-sec')">Admission</button>
+      <button class="btn-sm btn-gold" onclick="gotoSec('admission-sec')">Apply Now</button>
+    </div>
+  </div>
+  <div class="ticker-wrap"><span class="ticker-txt" id="tickerTxt">🌿 Admissions Open Now! · Diploma in Naturopathy · 1 Year Course · Only ₹25,000 · 10th Pass Eligible · Job Placement + Franchise Certificate · Contact: 9026554181 · Transport Nagar, Bareilly 🌿</span></div>
+
+  <div class="hscroll" id="hscroll">
+    <!-- HERO -->
+    <section class="hero" id="hero-sec">
+      <div class="hero-wrap">
+        <div class="hero-badge">🌿 &nbsp; Natural Healing · Healthy Living &nbsp; 🌿</div>
+        <div class="hero-seal-big" id="heroSeal">🌿</div>
+        <div class="hero-course-tag" id="heroCourse">DIPLOMA IN</div>
+        <h1 class="hero-h1"><span class="gold-grad" id="heroH1">NATUROPATHY</span></h1>
+        <div class="hero-org" id="heroOrg">JRH Institute & Research Centre</div>
+        <div class="hero-loc">📍 <span id="heroLoc">Transport Nagar, Bareilly, India</span></div>
+        <div class="adm-banner">
+          <div class="adm-banner-inner">🎓 ADMISSIONS <span class="adm-open">OPEN NOW</span> !</div>
+        </div>
+        <div class="hero-cta">
+          <button class="hbtn hbtn-green" onclick="gotoSec('admission-sec')">📋 Admission Apply करें</button>
+          <button class="hbtn hbtn-gold" onclick="gotoSec('ai-sec')">🤖 AI से पूछें</button>
+        </div>
+        <div class="info-row">
+          <div class="info-box"><span class="ib-icon">🎓</span><span class="ib-label">Eligibility</span><div class="ib-val" id="iElig">10th Pass</div><div class="ib-sub">Any Recognized Board</div></div>
+          <div class="info-box"><span class="ib-icon">📅</span><span class="ib-label">Duration</span><div class="ib-val" id="iDur">1 YEAR</div><div class="ib-sub">One Year Course</div></div>
+          <div class="info-box"><span class="ib-icon">💻</span><span class="ib-label">Mode</span><div class="ib-val" id="iMode">Recorded</div><div class="ib-sub">Flexible Learning</div></div>
+          <div class="info-box"><span class="ib-icon">₹</span><span class="ib-label">Total Fees</span><div class="ib-val ib-price" id="iFees">₹25,000</div><div class="ib-sub">ONLY</div></div>
+        </div>
+      </div>
+      <div class="scroll-cue"><div class="sc-ring"><div class="sc-dot"></div></div></div>
+    </section>
+
+    <!-- WHAT YOU LEARN -->
+    <section class="sec sec-band" id="learn-sec">
+      <div style="max-width:1100px;margin:0 auto">
+        <span class="stag">⭐ What You Will Learn</span>
+        <h2 class="sh2">Course <em>Curriculum</em></h2>
+        <div class="sdiv"></div>
+        <div class="learn-grid" id="learnGrid"></div>
+      </div>
+    </section>
+
+    <!-- BENEFITS -->
+    <section class="sec" id="benefits-sec">
+      <span class="stag">✨ Special Benefits</span>
+      <h2 class="sh2">Course <em>Special Benefits</em></h2>
+      <div class="sdiv"></div>
+      <!-- PLACEMENT HIGHLIGHT -->
+      <div class="placement-box">
+        <div class="pb-badge">🌟 Special Benefit</div>
+        <div class="pb-title">Job Placement का <span>अवसर</span></div>
+        <div class="pb-org">🌿 Jami Raza Herbal Pvt. Ltd.</div>
+        <div class="pb-sub">Course complete करने के बाद JOB PLACEMENT मिलेगा</div>
+      </div>
+      <div class="benefits-grid" id="benefitsGrid"></div>
+    </section>
+
+    <!-- AI CHAT -->
+    <section class="sec sec-band" id="ai-sec">
+      <div style="max-width:1100px;margin:0 auto">
+        <span class="stag">🤖 AI Powered</span>
+        <h2 class="sh2">AI <em>Course Assistant</em></h2>
+        <div class="sdiv"></div>
+        <p style="font-family:var(--cb);font-size:15px;color:rgba(255,253,245,0.48);margin-bottom:20px;line-height:1.8;font-style:italic">Course, fees, admission, placement, franchise ke baare mein koi bhi sawaal poochhen — AI turant jawab dega!</p>
+        <div class="chat-wrap">
+          <div class="chat-hdr">
+            <div class="chat-av">🌿</div>
+            <div>
+              <div class="chat-av-name">JRH AI Assistant</div>
+              <div class="chat-av-status"><span class="sdot"></span> Online · Natural Healing Expert</div>
+            </div>
+          </div>
+          <div class="qchips">
+            <div class="qchip" onclick="quickAsk('Fees kitni hai?')">💰 Fees?</div>
+            <div class="qchip" onclick="quickAsk('Admission kaise karna hai?')">📋 Admission?</div>
+            <div class="qchip" onclick="quickAsk('Job placement milega?')">💼 Placement?</div>
+            <div class="qchip" onclick="quickAsk('Franchise certificate kya hota hai?')">🏆 Franchise?</div>
+            <div class="qchip" onclick="quickAsk('Course mein kya sikhenge?')">📚 Syllabus?</div>
+            <div class="qchip" onclick="quickAsk('10th pass ke liye eligible hoon?')">✅ Eligible?</div>
+          </div>
+          <div class="chat-msgs" id="chatMsgs"></div>
+          <div class="chat-input-row">
+            <input class="chat-input" id="chatInput" placeholder="Koi bhi sawaal poochhen..." onkeydown="if(event.key==='Enter')sendChat()">
+            <button class="chat-send" onclick="sendChat()">➤</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="sec" id="gallery-sec">
+      <span class="stag">📸 Campus Life</span>
+      <h2 class="sh2">Institute <em>Gallery</em></h2>
+      <div class="sdiv"></div>
+      <div class="gal-grid" id="galGrid"></div>
+    </section>
+
+    <!-- NOTICES -->
+    <section class="sec sec-band" id="notices-sec">
+      <div style="max-width:1100px;margin:0 auto">
+        <span class="stag">📢 Latest Updates</span>
+        <h2 class="sh2">Notice <em>Board</em></h2>
+        <div class="sdiv"></div>
+        <div class="notice-list" id="noticeList"></div>
+      </div>
+    </section>
+
+    <!-- ADMISSION FORM -->
+    <section class="sec" id="admission-sec">
+      <span class="stag">📋 Enroll Now</span>
+      <h2 class="sh2">Admission <em>Form 2024-25</em></h2>
+      <div class="sdiv"></div>
+      <div class="adm-wrap">
+        <div style="font-family:var(--ch);font-size:18px;color:var(--gold2);margin-bottom:5px;font-weight:900" id="admTitle">Diploma in Naturopathy — 2024-25</div>
+        <div style="font-family:var(--cb);font-size:13px;color:rgba(255,253,245,0.42);margin-bottom:22px">सभी details सही भरें और submit करें</div>
+        <div class="step-bar">
+          <div class="step active" onclick="gotoFStep(0)"><span class="step-n">①</span>Personal</div>
+          <div class="step" onclick="gotoFStep(1)"><span class="step-n">②</span>Education</div>
+          <div class="step" onclick="gotoFStep(2)"><span class="step-n">③</span>Course</div>
+          <div class="step" onclick="gotoFStep(3)"><span class="step-n">④</span>Submit</div>
+        </div>
+        <div class="fpage active" id="fp0">
+          <div class="frow"><div class="fg"><label class="fl">पूरा नाम *</label><input type="text" class="fi" id="af-name" placeholder="Full Name"></div><div class="fg"><label class="fl">जन्म तिथि</label><input type="date" class="fi" id="af-dob"></div></div>
+          <div class="frow"><div class="fg"><label class="fl">Mobile No. *</label><input type="tel" class="fi" id="af-mobile" placeholder="+91 XXXXX XXXXX"></div><div class="fg"><label class="fl">Email</label><input type="email" class="fi" id="af-email" placeholder="email@example.com"></div></div>
+          <div class="fg" style="margin-bottom:12px"><label class="fl">पूरा पता</label><textarea class="fta" id="af-addr" placeholder="City, District, State..."></textarea></div>
+          <div class="frow"><div class="fg"><label class="fl">Category</label><select class="fsel" id="af-cat"><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option></select></div><div class="fg"><label class="fl">Gender</label><select class="fsel" id="af-gender"><option>Male</option><option>Female</option><option>Other</option></select></div></div>
+        </div>
+        <div class="fpage" id="fp1">
+          <div class="frow"><div class="fg"><label class="fl">10th Board</label><input type="text" class="fi" id="af-board" placeholder="UP Board / CBSE"></div><div class="fg"><label class="fl">10th Marks %</label><input type="text" class="fi" id="af-10th" placeholder="e.g. 65%"></div></div>
+          <div class="frow"><div class="fg"><label class="fl">Higher Qualification</label><input type="text" class="fi" id="af-higher" placeholder="12th / Graduate etc."></div><div class="fg"><label class="fl">Marks %</label><input type="text" class="fi" id="af-hpct" placeholder="e.g. 70%"></div></div>
+          <div class="fg" style="margin-bottom:12px"><label class="fl">Previous School / College</label><input type="text" class="fi" id="af-prevcol" placeholder="School / College Name"></div>
+          <div class="fg"><label class="fl">Medical Background है?</label><select class="fsel" id="af-medical"><option>No</option><option>Yes - MBBS</option><option>Yes - BAMS/BHMS</option><option>Yes - Nursing</option><option>Yes - Other</option></select></div>
+        </div>
+        <div class="fpage" id="fp2">
+          <div class="fg" style="margin-bottom:12px"><label class="fl">Course</label><select class="fsel" id="af-course"><option>Diploma in Naturopathy (1 Year)</option></select></div>
+          <div class="fg" style="margin-bottom:12px"><label class="fl">Learning Mode</label><select class="fsel" id="af-mode"><option>Recorded Classes (Online)</option><option>Live Classes (Online)</option><option>Offline (Bareilly Campus)</option></select></div>
+          <div class="fg" style="margin-bottom:12px"><label class="fl">Franchise Certificate चाहिए?</label><select class="fsel" id="af-franchise"><option>Yes — Interested</option><option>No — Not Required</option></select></div>
+          <div class="fg" style="margin-bottom:12px"><label class="fl">Job Placement Support?</label><select class="fsel" id="af-placement"><option>Yes — Interested</option><option>Will decide later</option></select></div>
+          <div class="fg"><label class="fl">कैसे जाना हमारे बारे में?</label><select class="fsel" id="af-source"><option>Friends / Family</option><option>Social Media</option><option>YouTube</option><option>WhatsApp</option><option>Newspaper</option><option>Other</option></select></div>
+        </div>
+        <div class="fpage" id="fp3">
+          <div style="text-align:center;padding:14px 0">
+            <div style="font-size:54px;margin-bottom:14px;animation:ibFloat 2s ease-in-out infinite">🎓</div>
+            <div style="font-family:var(--ch);font-size:17px;color:var(--gold2);margin-bottom:8px;font-weight:900">Application Ready!</div>
+            <div style="font-family:var(--cb);font-size:13px;color:rgba(255,253,245,0.48);line-height:1.8;margin-bottom:16px">Submit करने के बाद JRH team जल्द contact करेगी।</div>
+            <div style="background:rgba(27,94,32,0.2);border:1px solid rgba(67,160,71,0.2);border-radius:10px;padding:16px;text-align:left;margin-bottom:14px">
+              <div style="font-family:var(--ch);font-size:9px;color:var(--g5);letter-spacing:2.5px;margin-bottom:10px">CONTACT / ENQUIRY</div>
+              <div style="font-family:var(--cb);font-size:14px;color:rgba(255,253,245,0.65);line-height:1.85">📞 9026554181<br>📍 Transport Nagar, Bareilly, India<br>🌿 Natural Healing · Healthy Living<br>🏢 Jami Raza Herbal Pvt. Ltd.</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;text-align:left"><input type="checkbox" id="declCheck" style="margin-top:3px;accent-color:var(--g3);flex-shrink:0"><span style="font-family:var(--cb);font-size:12px;color:rgba(255,253,245,0.45);line-height:1.65">मैं घोषणा करता/करती हूं कि दी गई सभी जानकारी सत्य है और मैं JRH Institute के नियमों का पालन करूंगा/करूंगी।</span></div>
+          </div>
+        </div>
+        <div class="fbtns">
+          <button class="fprev-btn" id="fprevBtn" style="display:none" onclick="stepChange(-1)">← Back</button>
+          <button class="fnext-btn" id="fnextBtn" onclick="stepChange(1)">Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="sec" id="contact-sec">
+      <span class="stag">📞 Get In Touch</span>
+      <h2 class="sh2">हमसे <em>Contact</em> करें</h2>
+      <div class="sdiv"></div>
+      <div class="contact-layout">
+        <div class="contact-cards">
+          <div class="cc"><div class="cc-label">📞 Phone / WhatsApp</div><div class="cc-val phone-big" id="cPhone">9026554181</div></div>
+          <div class="cc"><div class="cc-label">📍 Address</div><div class="cc-val" id="cAddr">Transport Nagar, Bareilly, India</div></div>
+          <div class="cc"><div class="cc-label">🏢 Organization</div><div class="cc-val">Jami Raza Herbal Pvt. Ltd.</div></div>
+          <div class="cc"><div class="cc-label">⏰ Office Hours</div><div class="cc-val" id="cHours">Mon-Sat: 9 AM - 6 PM</div></div>
+          <a class="call-now-btn" href="tel:9026554181">📞 Call Now — 9026554181</a>
+        </div>
+        <div class="form-box">
+          <div style="font-family:var(--ch);font-size:16px;color:var(--gold2);margin-bottom:18px;font-weight:900">Send Enquiry</div>
+          <div class="frow"><div class="fg"><label class="fl">नाम</label><input type="text" class="fi" placeholder="Full Name"></div><div class="fg"><label class="fl">Mobile</label><input type="tel" class="fi" placeholder="9XXXXXXXXX"></div></div>
+          <div class="fg" style="margin-bottom:13px"><label class="fl">Message</label><textarea class="fta" placeholder="Course ke baare mein poochhen..."></textarea></div>
+          <button class="fnext-btn" onclick="toast('✅ Enquiry Sent! Hum jald contact karenge.')">Send Enquiry →</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="ft-logo" id="ftLogo">🌿 JRH Institute & Research Centre</div>
+      <div class="ft-sub" id="ftSub2">Natural Healing · Healthy Living · Transport Nagar, Bareilly</div>
+      <div class="ft-links">
+        <span class="ft-link" onclick="gotoSec('hero-sec')">Home</span>
+        <span class="ft-link" onclick="gotoSec('learn-sec')">Curriculum</span>
+        <span class="ft-link" onclick="gotoSec('benefits-sec')">Benefits</span>
+        <span class="ft-link" onclick="gotoSec('ai-sec')">AI Help</span>
+        <span class="ft-link" onclick="gotoSec('admission-sec')">Admission</span>
+        <span class="ft-link" onclick="gotoSec('contact-sec')">Contact</span>
+      </div>
+      <div class="ft-sub">Jami Raza Herbal Pvt. Ltd. · © 2024 All Rights Reserved</div>
+    </footer>
+  </div>
+
+  <div class="bnav">
+    <div class="bn active" onclick="bnClick(this,'hero-sec')"><div class="bni">🏠</div><div class="bnl">Home</div></div>
+    <div class="bn" onclick="bnClick(this,'learn-sec')"><div class="bni">📚</div><div class="bnl">Course</div></div>
+    <div class="bn" onclick="bnClick(this,'benefits-sec')"><div class="bni">✨</div><div class="bnl">Benefits</div></div>
+    <div class="bn" onclick="bnClick(this,'ai-sec')"><div class="bni">🤖</div><div class="bnl">AI Help</div></div>
+    <div class="bn" onclick="bnClick(this,'admission-sec')"><div class="bni">🎓</div><div class="bnl">Admission</div></div>
+    <div class="bn" onclick="bnClick(this,'contact-sec')"><div class="bni">📞</div><div class="bnl">Contact</div></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="view" id="admin">
+  <div class="adm-login" id="admLogin">
+    <div class="login-card">
+      <span class="lci">🔐</span>
+      <div class="lct">Admin Panel</div>
+      <div class="lcs">JRH Institute & Research Centre</div>
+      <div class="fg" style="text-align:left;margin-bottom:13px"><label class="fl" style="margin-bottom:5px">Username</label><input type="text" class="fi" id="lusr" placeholder="admin"></div>
+      <div class="fg" style="text-align:left"><label class="fl" style="margin-bottom:5px">Password</label><input type="password" class="fi" id="lpass" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="sbtn" style="width:100%;margin-top:16px" onclick="doLogin()">Login करें →</button>
+      <div class="lce" id="lerr">❌ Incorrect credentials</div>
+    </div>
+  </div>
+  <div class="adm-bar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="tb-seal" style="background:linear-gradient(135deg,var(--g2),var(--gold))">⚙️</div>
+      <div><div class="tb-name">Admin Panel</div><span class="tb-name-sub">JRH Institute</span></div>
+    </div>
+    <div style="display:flex;gap:7px">
+      <button class="btn-sm btn-gold" onclick="goHome()">🏠 Website</button>
+      <button class="btn-sm btn-ghost" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+  <div class="adm-content">
+    <button class="back-home-btn" onclick="goHome()"><span style="font-size:20px">🏠</span>← College Website / Home पर जाएं</button>
+    <div class="adm-hdr">
+      <div class="adm-av">⚙️</div>
+      <div>
+        <div style="font-family:var(--ch);font-size:17px;color:var(--gold2);font-weight:900">Admin Dashboard</div>
+        <div style="font-family:var(--cb);font-size:11px;color:rgba(255,253,245,0.32);margin-top:3px;letter-spacing:1px">JRH Institute · Login: admin / admin123</div>
+      </div>
+    </div>
+
+    <!-- APPLICATIONS -->
+    <div class="asec open" id="as-apps">
+      <div class="asec-h" onclick="togSec('as-apps')">
+        <div class="asec-t">📋 Admission Applications<span class="notif-badge" id="pendBadge" style="display:none">0</span></div>
+        <div class="asec-arr">▼</div>
+      </div>
+      <div class="asec-body">
+        <div class="app-stats-row">
+          <div class="app-stat s-total"><span class="app-stat-n" id="stTotal">0</span><span class="app-stat-l">Total</span></div>
+          <div class="app-stat s-pend"><span class="app-stat-n" id="stPend">0</span><span class="app-stat-l">Pending</span></div>
+          <div class="app-stat s-appr"><span class="app-stat-n" id="stAppr">0</span><span class="app-stat-l">Approved</span></div>
+          <div class="app-stat s-canc"><span class="app-stat-n" id="stCanc">0</span><span class="app-stat-l">Cancelled</span></div>
+        </div>
+        <div class="app-filter-row">
+          <button class="afb active" onclick="filterApps('all',this)">All</button>
+          <button class="afb" onclick="filterApps('pending',this)">⏳ Pending</button>
+          <button class="afb" onclick="filterApps('approved',this)">✅ Approved</button>
+          <button class="afb" onclick="filterApps('cancelled',this)">❌ Cancelled</button>
+        </div>
+        <div id="appsList"></div>
+      </div>
+    </div>
+
+    <!-- BRANDING -->
+    <div class="asec" id="as-brand">
+      <div class="asec-h" onclick="togSec('as-brand')"><div class="asec-t">🌿 Institute Name & Logo</div><div class="asec-arr">▼</div></div>
+      <div class="asec-body">
+        <div class="er"><div class="eg"><label class="el">Institute Name</label><input type="text" class="ei" id="eb-name"></div><div class="eg"><label class="el">Sub-title</label><input type="text" class="ei" id="eb-sub"></div></div>
+        <div class="er"><div class="eg"><label class="el">Location</label><input type="text" class="ei" id="eb-loc"></div><div class="eg"><label class="el">Tagline</label><input type="text" class="ei" id="eb-tag"></div></div>
+        <div class="eg" style="margin-bottom:12px"><label class="el">Logo Icon</label>
+          <div class="logo-opts" id="logoOpts">
+            <span class="lopt sel" onclick="pickLogo(this,'🌿')">🌿</span>
+            <span class="lopt" onclick="pickLogo(this,'🌱')">🌱</span>
+            <span class="lopt" onclick="pickLogo(this,'🍃')">🍃</span>
+            <span class="lopt" onclick="pickLogo(this,'⚕️')">⚕️</span>
+            <span class="lopt" onclick="pickLogo(this,'🏥')">🏥</span>
+            <span class="lopt" onclick="pickLogo(this,'🌸')">🌸</span>
+            <span class="lopt" onclick="pickLogo(this,'🧘')">🧘</span>
+            <span class="lopt" onclick="pickLogo(this,'🌺')">🌺</span>
+          </div>
+        </div>
+        <div class="eg" style="margin-bottom:12px"><label class="el">Ticker Bar Text</label><input type="text" class="ei" id="eb-ticker"></div>
+        <button class="sbtn" onclick="saveBrand()">💾 Save Branding</button>
+      </div>
+    </div>
+
+    <!-- HERO / COURSE INFO -->
+    <div class="asec" id="as-hero">
+      <div class="asec-h" onclick="togSec('as-hero')"><div class="asec-t">🎯 Hero & Course Info</div><div class="asec-arr">▼</div></div>
+      <div class="asec-body">
+        <div class="er"><div class="eg"><label class="el">Course Name (Main Heading)</label><input type="text" class="ei" id="eh-h1"></div><div class="eg"><label class="el">Diploma In / Sub Tag</label><input type="text" class="ei" id="eh-course"></div></div>
+        <div class="er"><div class="eg"><label class="el">Institute / Org Name</label><input type="text" class="ei" id="eh-org"></div><div class="eg"><label class="el">Location</label><input type="text" class="ei" id="eh-loc"></div></div>
+        <div class="er"><div class="eg"><label class="el">Eligibility</label><input type="text" class="ei" id="eh-elig"></div><div class="eg"><label class="el">Duration</label><input type="text" class="ei" id="eh-dur"></div></div>
+        <div class="er"><div class="eg"><label class="el">Mode of Learning</label><input type="text" class="ei" id="eh-mode"></div><div class="eg"><label class="el">Total Fees</label><input type="text" class="ei" id="eh-fees"></div></div>
+        <button class="sbtn" onclick="saveHero()">💾 Save Hero Info</button>
+      </div>
+    </div>
+
+    <!-- LEARN -->
+    <div class="asec" id="as-learn">
+      <div class="asec-h" onclick="togSec('as-learn')"><div class="asec-t">📚 What You Learn Edit</div><div class="asec-arr">▼</div></div>
+      <div class="asec-body">
+        <button class="abtn" onclick="addLearn()">+ New Subject Add करें</button>
+        <div id="learnEdit"></div>
+        <button class="sbtn" onclick="saveLearn()">💾 Save Curriculum</button>
+      </div>
+    </div>
+
+    <!-- BENEFITS -->
+    <div class="asec" id="as-benefits">
+      <div class="asec-h" onclick="togSec('as-benefits')"><div class="asec-t">✨ Benefits Edit</div><div class="asec-arr">▼</div></div>
+      <div class="asec-body">
+        <button class="abtn" onclick="addBenefit()">+ New Benefit Add करें</button>
+        <div id="benefitsEdit"></div>
+        <button class="sbtn" onclick="saveBenefits()">💾 Save Benefits</button>
+      </div>
+    </div>
+
+    <!-- GALLERY -->
+    <div class="asec" id="as-gal">
+      <div class="asec-h" onclick="togSec('as-gal')"><div class="asec-t">🖼️ Gallery Edit</div><div class="asec-arr">▼</div></div>
+      <div class="asec-body">
+        <button class="abtn" onclick="addGal()">+ New Photo Add</button>
+        <div id="galEdit"></div>
+        <button class="sbtn" onclick="saveGal()">💾 Save Gallery</button>
+      </div>
+    </div>
+
+    <!-- NOTICES -->
+    <div class="asec" id="as-notices">
+      <div class="asec-h" onclick="togSec('as-notices')"><div class="asec-t">📢 Notice Board Edit</div><div class="asec-arr">▼</div></div>
+      <div class="asec-body">
+        <button class="abtn" onclick="addNotice()">+ New Notice Add</button>
+        <div id="noticeEdit"></div>
+        <button class="sbtn" onclick="saveNotices()">💾 Save Notices</button>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="asec" id="as-contact">
+      <div class="asec-h" onclick="togSec('as-contact')"><div class="asec-t">📞 Contact Details</div><div class="asec-arr">▼</div></div>
+      <div class="asec-body">
+        <div class="er"><div class="eg"><label class="el">Phone Number</label><input type="text" class="ei" id="ec-phone"></div><div class="eg"><label class="el">WhatsApp</label><input type="text" class="ei" id="ec-wa"></div></div>
+        <div class="eg" style="margin-bottom:12px"><label class="el">College Address</label><textarea class="eta" id="ec-addr" style="min-height:60px"></textarea></div>
+        <div class="er"><div class="eg"><label class="el">Office Hours</label><input type="text" class="ei" id="ec-hours"></div><div class="eg"><label class="el">Email</label><input type="text" class="ei" id="ec-email"></div></div>
+        <button class="sbtn" onclick="saveContact()">💾 Save Contact</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="asec" id="as-settings">
+      <div class="asec-h" onclick="togSec('as-settings')"><div class="asec-t">⚙️ Settings</div><div class="asec-arr">▼</div></div>
+      <div class="asec-body">
+        <div class="tog-row"><span class="tog-label">Gallery Section</span><label class="tog"><input type="checkbox" checked><span class="tog-sl"></span></label></div>
+        <div class="tog-row"><span class="tog-label">Notice Board</span><label class="tog"><input type="checkbox" checked><span class="tog-sl"></span></label></div>
+        <div class="tog-row"><span class="tog-label">AI Chat Assistant</span><label class="tog"><input type="checkbox" checked><span class="tog-sl"></span></label></div>
+        <div class="tog-row"><span class="tog-label">Admission Form Active</span><label class="tog"><input type="checkbox" checked><span class="tog-sl"></span></label></div>
+        <div class="tog-row"><span class="tog-label">Ticker Bar</span><label class="tog"><input type="checkbox" checked><span class="tog-sl"></span></label></div>
+        <div style="margin-top:18px"><label class="el">Password Change</label>
+          <div class="er" style="margin-top:8px"><div class="eg"><input type="password" class="ei" id="np1" placeholder="New Password"></div><div class="eg"><input type="password" class="ei" id="np2" placeholder="Confirm Password"></div></div>
+          <button class="sbtn" onclick="chgPass()">🔒 Password Change</button>
+        </div>
+        <div style="margin-top:14px"><button class="sbtn" style="background:linear-gradient(135deg,#1a5a2a,#2a8a40)" onclick="if(confirm('Reset to default?'))location.reload()">🔄 Reset to Default</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<div id="admFab"><button class="fab-btn" onclick="goAdmin()">⚙️</button><span class="fab-lbl">ADMIN</span></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+let D = {
+  logo:'🌿', name:'JRH Institute & Research Centre', sub:'& Research Centre',
+  loc:'Transport Nagar, Bareilly, India', tag:'Natural Healing · Healthy Living',
+  ticker:'🌿 Admissions Open Now! · Diploma in Naturopathy · 1 Year Course · Only ₹25,000 · 10th Pass Eligible · Job Placement + Franchise Certificate · Contact: 9026554181 · Transport Nagar, Bareilly 🌿',
+  heroH1:'NATUROPATHY', heroCourse:'DIPLOMA IN',
+  heroOrg:'JRH Institute & Research Centre', heroLoc:'Transport Nagar, Bareilly, India',
+  elig:'10th Pass', dur:'1 YEAR', mode:'Recorded', fees:'₹25,000',
+  phone:'9026554181', addr:'Transport Nagar, Bareilly, India',
+  hours:'Mon-Sat: 9 AM - 6 PM', wa:'9026554181', email:'jrh@example.com',
+  adminPass:'admin123', applications:[], appFilter:'all',
+  learn:[
+    {icon:'🥗',title:'Natural Healing, Diet & Nutrition',desc:'Food therapy, balanced diet, healing through natural nutrition and customized diet plans for wellness.'},
+    {icon:'🧘',title:'Yoga & Lifestyle Management',desc:'Yoga therapy, meditation, pranayama, stress management and holistic lifestyle guidance for better health.'},
+    {icon:'🌿',title:'Herbal Remedies & Holistic Treatment',desc:'Ayurvedic herbs, natural medicines, plant-based remedies and complete holistic treatment methods.'},
+    {icon:'❤️',title:'Preventive Healthcare & Wellness',desc:'Disease prevention strategies, wellness programs, immunity building and preventive health management.'},
+  ],
+  benefits:[
+    {icon:'💼',title:'Job Placement का अवसर',desc:'Course complete करने के बाद Jami Raza Herbal Pvt. Ltd. में JOB PLACEMENT का अवसर दिया जाएगा।',isFranchise:false},
+    {icon:'🏆',title:'Franchise Certificate',desc:'साथ में मिलेगा Franchise Certificate (Separate Certification) — अपना Natural Healing Center शुरू करें।',isFranchise:true},
+    {icon:'📜',title:'Recognized Certificate',desc:'Valid और recognized certificate जो आपके natural medicine career को नई ऊंचाइयों पर ले जाएगा।',isFranchise:false},
+    {icon:'🌿',title:'Practical Training',desc:'Theoretical knowledge के साथ-साथ practical training जो आपको real-world में expert बनाएगी।',isFranchise:false},
+  ],
+  gallery:[
+    {emoji:'🏫',cap:'Institute'},{emoji:'🌿',cap:'Herbal Garden'},{emoji:'📚',cap:'Library'},
+    {emoji:'🧘',cap:'Yoga Hall'},{emoji:'🔬',cap:'Lab'},{emoji:'🎓',cap:'Convocation'},
+    {emoji:'🌱',cap:'Herbs'},{emoji:'📋',cap:'Certificate'},{emoji:'🤝',cap:'Seminar'},
+  ],
+  notices:[
+    {icon:'📢',title:'Admissions Open 2024-25 — Diploma in Naturopathy',date:'01 Nov 2024',isNew:true},
+    {icon:'💰',title:'Early Bird Discount Available — Limited Time Offer',date:'20 Oct 2024',isNew:true},
+    {icon:'🏆',title:'New Batch Starting Soon — Limited Seats Available',date:'10 Oct 2024',isNew:true},
+    {icon:'📚',title:'Course Material Updated — New Modules Added',date:'01 Oct 2024',isNew:false},
+    {icon:'🌿',title:'New Herbal Research Published by JRH Team',date:'20 Sep 2024',isNew:false},
+    {icon:'🎓',title:'Previous Batch Placement: 95% Success Rate',date:'10 Sep 2024',isNew:false},
+  ],
+};
+
+let loggedIn=false, pickedLogo='🌿', admStep=0;
+
+// ============================================================
+// INIT
+// ============================================================
+window.onload=function(){
+  initBG(); initLeaves();
+  initChat();
+  setTimeout(()=>{
+    document.getElementById('splash').style.display='none';
+    showView('home'); renderHome();
+    document.getElementById('admFab').style.display='flex';
+  },4300);
+};
+
+// ============================================================
+// BACKGROUND
+// ============================================================
+function initBG(){
+  const c=document.getElementById('bgc'),ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;c.style.width=window.innerWidth+'px';c.style.height=window.innerHeight+'px'}
+  resize();window.addEventListener('resize',resize);
+  const pts=Array.from({length:65},()=>({
+    x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,
+    vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,
+    r:Math.random()*1.3+.3,a:Math.random()*.45+.08
+  }));
+  function frame(){
+    const W=c.width,H=c.height;ctx.clearRect(0,0,W,H);
+    const g=ctx.createRadialGradient(W*.3,H*.3,.1,W*.5,H*.5,Math.max(W,H)*.8);
+    g.addColorStop(0,'#0C1F0D');g.addColorStop(.5,'#09170A');g.addColorStop(1,'#070D08');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    // subtle leaf pattern
+    ctx.strokeStyle='rgba(67,160,71,0.025)';ctx.lineWidth=1;
+    for(let i=0;i<W;i+=90){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke()}
+    pts.forEach((p,i)=>{
+      pts.slice(i+1).forEach(q=>{
+        const d=Math.hypot(p.x-q.x,p.y-q.y);
+        if(d<120){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=`rgba(67,160,71,${.055*(1-d/120)})`;ctx.lineWidth=.45;ctx.stroke()}
+      });
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(67,160,71,${p.a})`;ctx.fill();
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function initLeaves(){
+  const w=document.getElementById('fpWrap');
+  ['🌿','🍃','🌱','🌾','🌸'].forEach(s=>{
+    for(let j=0;j<3;j++){
+      const el=document.createElement('div');el.className='fp';el.textContent=s;
+      el.style.cssText=`left:${Math.random()*100}%;font-size:${12+Math.random()*15}px;animation-duration:${22+Math.random()*18}s;animation-delay:${-Math.random()*25}s`;
+      w.appendChild(el);
+    }
+  });
+}
+
+// ============================================================
+// VIEWS
+// ============================================================
+function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(v).classList.add('active')}
+function goHome(){showView('home');renderHome()}
+function goAdmin(){showView('admin');if(!loggedIn)document.getElementById('admLogin').style.display='flex';else{document.getElementById('admLogin').style.display='none';fillAdmin()}}
+function doLogin(){
+  const u=document.getElementById('lusr').value.trim(),p=document.getElementById('lpass').value;
+  if(u==='admin'&&p===D.adminPass){loggedIn=true;document.getElementById('admLogin').style.display='none';fillAdmin();toast('✅ Welcome Admin!')}
+  else{document.getElementById('lerr').style.display='block';setTimeout(()=>document.getElementById('lerr').style.display='none',3000)}
+}
+function doLogout(){loggedIn=false;document.getElementById('admLogin').style.display='flex';document.getElementById('lusr').value='';document.getElementById('lpass').value=''}
+
+// ============================================================
+// RENDER HOME
+// ============================================================
+function renderHome(){
+  ['spIcon','tbSeal','heroSeal'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=D.logo});
+  st('spTitle',D.name);st('spSub',D.sub);st('spLoc',D.loc);
+  st('tbName',D.name);st('tbSub',D.loc);
+  st('tickerTxt',D.ticker);
+  st('ftLogo',D.logo+' '+D.name);st('ftSub2','Natural Healing · Healthy Living · '+D.loc);
+  st('heroCourse',D.heroCourse);
+  document.getElementById('heroH1').innerHTML='<span class="gold-grad">'+D.heroH1+'</span>';
+  st('heroOrg',D.heroOrg);st('heroLoc',D.heroLoc);
+  st('iElig',D.elig);st('iDur',D.dur);st('iMode',D.mode);st('iFees',D.fees);
+  st('cPhone',D.phone);st('cAddr',D.addr);st('cHours',D.hours);
+  // learn
+  document.getElementById('learnGrid').innerHTML=D.learn.map(l=>`
+    <div class="learn-card"><span class="lc-icon">${l.icon}</span><div class="lc-title">${l.title}</div><div class="lc-desc">${l.desc}</div></div>`).join('');
+  // benefits
+  document.getElementById('benefitsGrid').innerHTML=D.benefits.map(b=>`
+    <div class="ben-card ${b.isFranchise?'franchise':''}">
+      <div class="ben-icon">${b.icon}</div>
+      <div><div class="ben-title">${b.title}</div><div class="ben-desc">${b.desc}</div></div>
+    </div>`).join('');
+  // gallery
+  document.getElementById('galGrid').innerHTML=D.gallery.map(g=>`
+    <div class="gal-item">${g.emoji}<div class="gal-ov">🔍</div><div class="gal-cap">${g.cap}</div></div>`).join('');
+  // notices
+  document.getElementById('noticeList').innerHTML=D.notices.map(n=>`
+    <div class="ni"><div class="ni-icon">${n.icon}</div><div style="flex:1"><div class="ni-title">${n.title}</div><div class="ni-date">${n.date}</div></div>${n.isNew?'<div class="ni-new">NEW</div>':''}</div>`).join('');
+}
+function st(id,val){const el=document.getElementById(id);if(el)el.textContent=val}
+
+// ============================================================
+// AI CHAT
+// ============================================================
+const KB={
+  fees:'Diploma in Naturopathy ki total fees sirf ₹25,000 hai — bahut affordable! Ek saal ka complete professional diploma course. Koi hidden charges nahi.',
+  admission:'Admission ke liye: 1️⃣ 10th pass hona chahiye (any board) 2️⃣ Online/offline form fill karein 3️⃣ Fees pay karein. Abhi call karein: 9026554181',
+  placement:'Haan! Course complete hone ke baad Jami Raza Herbal Pvt. Ltd. mein Job Placement ka avsar milega. Natural & herbal products ki growing industry mein career shuru kar sakte hain.',
+  franchise:'Course ke saath ek alag Franchise Certificate bhi milega! Isse aap apna khud ka Natural Healing Center ya franchise business shuru kar sakte hain — bahut bada advantage.',
+  syllabus:'Course mein 4 main subjects hain: 1) Natural Healing & Diet/Nutrition 2) Yoga & Lifestyle Management 3) Herbal Remedies & Holistic Treatment 4) Preventive Healthcare & Wellness',
+  duration:'Course ki duration 1 Year (ek saal) hai. Mode hai Recorded Classes — aap apni convenience ke hisaab se kahin bhi, kabhi bhi seekh sakte hain.',
+  eligibility:'Sirf 10th Pass chahiye — any recognized board se! Koi age limit nahi. Medical background bhi zarori nahi. Sab eligible hain.',
+  contact:'📞 Call/WhatsApp: 9026554181\n📍 Transport Nagar, Bareilly, India\n🏢 Jami Raza Herbal Pvt. Ltd.\n🌿 Natural Healing · Healthy Living',
+  default:'Main JRH Institute ka AI Assistant hoon! 🌿 Fees, admission, placement, franchise, syllabus ke baare mein poochh sakte hain. Main poori help karoonga!'
+};
+
+function initChat(){
+  addBotMsg('Namaste! 🌿 Main JRH Institute & Research Centre ka AI Assistant hoon। Diploma in Naturopathy course ke baare mein koi bhi sawaal poochhen — main turant jawab dunga!');
+}
+function addBotMsg(text){
+  const el=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className='msg msg-bot';d.textContent=text;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+function addUserMsg(text){
+  const el=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className='msg msg-user';d.textContent=text;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+function showTyping(){
+  const el=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className='msg msg-bot';d.id='typingDiv';
+  d.innerHTML='<div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+function removeTyping(){const e=document.getElementById('typingDiv');if(e)e.remove()}
+
+async function sendChat(){
+  const inp=document.getElementById('chatInput');
+  const text=inp.value.trim();if(!text)return;
+  addUserMsg(text);inp.value='';
+  showTyping();
+  await sleep(1200);
+  removeTyping();
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:280,
+        messages:[{role:'user',content:`You are a helpful AI assistant for JRH Institute & Research Centre - a Naturopathy diploma college. Answer in Hinglish (mix of Hindi and English). Keep it warm, friendly and helpful.
+
+Key Facts:
+- Course: Diploma in Naturopathy (1 Year)
+- Fees: ₹25,000 only
+- Eligibility: 10th Pass (any recognized board)
+- Mode: Recorded Classes (flexible, online)
+- Location: Transport Nagar, Bareilly, India
+- Contact: 9026554181
+- Benefits: Job Placement at Jami Raza Herbal Pvt. Ltd. + Franchise Certificate (separate)
+- What you learn: Natural Healing & Nutrition, Yoga & Lifestyle, Herbal Remedies, Preventive Healthcare
+
+Student question: "${text}"
+
+Answer in max 2-3 sentences. Be encouraging and mention contact number if relevant.`}]
+      })
+    });
+    const data=await resp.json();
+    const reply=data.content.map(x=>x.text||'').join('').trim();
+    addBotMsg(reply||localReply(text));
+  }catch(e){addBotMsg(localReply(text))}
+}
+function localReply(t){
+  t=t.toLowerCase();
+  if(t.includes('fee')||t.includes('kitni')||t.includes('cost')||t.includes('price')||t.includes('paisa'))return KB.fees;
+  if(t.includes('admission')||t.includes('apply')||t.includes('enroll')||t.includes('join'))return KB.admission;
+  if(t.includes('placement')||t.includes('job')||t.includes('naukri')||t.includes('career'))return KB.placement;
+  if(t.includes('franchise')||t.includes('certificate')||t.includes('certif'))return KB.franchise;
+  if(t.includes('syllabus')||t.includes('subject')||t.includes('sikhenge')||t.includes('curriculum')||t.includes('learn'))return KB.syllabus;
+  if(t.includes('duration')||t.includes('kitne sal')||t.includes('year')||t.includes('time'))return KB.duration;
+  if(t.includes('eligib')||t.includes('10th')||t.includes('qualif')||t.includes('pass'))return KB.eligibility;
+  if(t.includes('contact')||t.includes('phone')||t.includes('number')||t.includes('call'))return KB.contact;
+  return KB.default;
+}
+function quickAsk(q){document.getElementById('chatInput').value=q;sendChat()}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+// ============================================================
+// ADMISSION FORM STEPS
+// ============================================================
+function gotoFStep(n){
+  admStep=n;
+  document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.fpage').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.getElementById('fprevBtn').style.display=n>0?'block':'none';
+  document.getElementById('fnextBtn').textContent=n===3?'🎓 Submit Application':'Next →';
+}
+function stepChange(d){
+  if(admStep+d>3){
+    const nm=gv('af-name'),mob=gv('af-mobile');
+    if(!nm){toast('❌ Please enter your name!');gotoFStep(0);return}
+    if(!mob){toast('❌ Please enter mobile number!');gotoFStep(0);return}
+    submitApp();return;
+  }
+  gotoFStep(Math.max(0,Math.min(3,admStep+d)));
+}
+function submitApp(){
+  const id='JRH-'+Date.now().toString().slice(-6);
+  const now=new Date();
+  const dt=now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  D.applications.push({
+    id,status:'pending',submittedAt:dt,
+    name:gv('af-name')||'—',dob:gv('af-dob')||'—',
+    mobile:gv('af-mobile')||'—',email:gv('af-email')||'—',
+    address:gv('af-addr')||'—',category:gv('af-cat')||'General',gender:gv('af-gender')||'Male',
+    board10:gv('af-board')||'—',marks10:gv('af-10th')||'—',
+    higher:gv('af-higher')||'—',hpct:gv('af-hpct')||'—',
+    prevCol:gv('af-prevcol')||'—',medical:gv('af-medical')||'No',
+    course:gv('af-course')||'Diploma in Naturopathy',
+    mode:gv('af-mode')||'Recorded',franchise:gv('af-franchise')||'Yes',
+    placement:gv('af-placement')||'Yes',source:gv('af-source')||'—',
+    adminNote:''
+  });
+  ['af-name','af-dob','af-mobile','af-email','af-addr','af-board','af-10th','af-higher','af-hpct','af-prevcol'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  updatePendBadge();
+  toast('✅ Application #'+id+' Submitted! JRH team जल्द contact करेगी।');
+  gotoFStep(0);
+}
+function gv(id){const el=document.getElementById(id);return el?el.value.trim():''}
+
+// ============================================================
+// APPLICATIONS
+// ============================================================
+function renderApps(){
+  const fil=D.applications.filter(a=>D.appFilter==='all'||a.status===D.appFilter);
+  const t=D.applications.length,p=D.applications.filter(a=>a.status==='pending').length,ap=D.applications.filter(a=>a.status==='approved').length,ca=D.applications.filter(a=>a.status==='cancelled').length;
+  st('stTotal',t);st('stPend',p);st('stAppr',ap);st('stCanc',ca);
+  const el=document.getElementById('appsList');
+  if(!fil.length){el.innerHTML='<div class="app-empty">'+(t===0?'📭 अभी कोई application नहीं।<br><small style="font-size:11px;display:block;margin-top:6px">Students submit karenge to yahan dikhega.</small>':'📭 Is filter mein koi application nahi.')+'</div>';return}
+  el.innerHTML=fil.map(a=>{
+    const gi=D.applications.indexOf(a);
+    const si=a.status==='approved'?'✅':a.status==='cancelled'?'❌':'⏳';
+    return`<div class="acard ${a.status}">
+      <div class="acard-top">
+        <div><div class="acard-name">${a.name}</div><div class="acard-id">${a.id} · ${a.submittedAt}</div></div>
+        <div class="status-badge ${a.status}">${si} ${a.status.toUpperCase()}</div>
+      </div>
+      <div class="acard-dg">
+        <div class="acard-d"><span class="acard-dl">📱 Mobile</span><span class="acard-dv">${a.mobile}</span></div>
+        <div class="acard-d"><span class="acard-dl">📚 Course</span><span class="acard-dv">${a.course}</span></div>
+        <div class="acard-d"><span class="acard-dl">🏷️ Category</span><span class="acard-dv">${a.category} · ${a.gender}</span></div>
+        <div class="acard-d"><span class="acard-dl">📧 Email</span><span class="acard-dv" style="font-size:12px">${a.email}</span></div>
+      </div>
+      <div class="acard-actions">
+        ${a.status!=='approved'?`<button class="aa aa-approve" onclick="chgStatus('${a.id}','approved')">✅ Approve</button>`:''}
+        ${a.status!=='cancelled'?`<button class="aa aa-cancel" onclick="chgStatus('${a.id}','cancelled')">❌ Cancel</button>`:''}
+        ${a.status!=='pending'?`<button class="aa aa-pending" onclick="chgStatus('${a.id}','pending')">⏳ Pending</button>`:''}
+        <button class="aa aa-view" onclick="toggleFull('${a.id}')">👁️ Details</button>
+        <button class="aa aa-del" onclick="delApp('${a.id}')">🗑️</button>
+      </div>
+      <div class="acard-full" id="full-${a.id}">
+        <div class="acard-full-grid">
+          <div class="acard-d"><span class="acard-dl">🎂 DOB</span><span class="acard-dv">${a.dob}</span></div>
+          <div class="acard-d"><span class="acard-dl">📍 Address</span><span class="acard-dv" style="font-size:11px">${a.address}</span></div>
+          <div class="acard-d"><span class="acard-dl">📋 10th Board</span><span class="acard-dv">${a.board10}</span></div>
+          <div class="acard-d"><span class="acard-dl">📊 10th Marks</span><span class="acard-dv">${a.marks10}</span></div>
+          <div class="acard-d"><span class="acard-dl">🎓 Higher Qual.</span><span class="acard-dv">${a.higher} ${a.hpct!=='—'?'('+a.hpct+')':''}</span></div>
+          <div class="acard-d"><span class="acard-dl">🏫 Prev. College</span><span class="acard-dv" style="font-size:11px">${a.prevCol}</span></div>
+          <div class="acard-d"><span class="acard-dl">⚕️ Medical Bg.</span><span class="acard-dv">${a.medical}</span></div>
+          <div class="acard-d"><span class="acard-dl">💻 Mode</span><span class="acard-dv">${a.mode}</span></div>
+          <div class="acard-d"><span class="acard-dl">🏆 Franchise?</span><span class="acard-dv">${a.franchise}</span></div>
+          <div class="acard-d"><span class="acard-dl">💼 Placement?</span><span class="acard-dv">${a.placement}</span></div>
+          <div class="acard-d"><span class="acard-dl">📣 Source</span><span class="acard-dv">${a.source}</span></div>
+        </div>
+        <textarea class="note-inp" placeholder="Admin note yahan likhein..." onchange="D.applications[${gi}].adminNote=this.value">${a.adminNote||''}</textarea>
+      </div>
+    </div>`;
+  }).join('');
+}
+function filterApps(f,el){D.appFilter=f;document.querySelectorAll('.afb').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderApps()}
+function chgStatus(id,status){
+  const a=D.applications.find(x=>x.id===id);if(!a)return;
+  a.status=status;updatePendBadge();renderApps();
+  toast({approved:'✅ Approved! ('+id+')',cancelled:'❌ Cancelled. ('+id+')',pending:'⏳ Pending mein dala. ('+id+')'}[status]);
+}
+function delApp(id){if(!confirm('Delete karein?'))return;const i=D.applications.findIndex(x=>x.id===id);if(i>=0)D.applications.splice(i,1);updatePendBadge();renderApps();toast('🗑️ Deleted.')}
+function toggleFull(id){document.getElementById('full-'+id)?.classList.toggle('open')}
+function updatePendBadge(){
+  const n=D.applications.filter(a=>a.status==='pending').length;
+  const b=document.getElementById('pendBadge');if(b){b.textContent=n;b.style.display=n>0?'flex':'none'}
+}
+
+// ============================================================
+// FILL ADMIN
+// ============================================================
+function fillAdmin(){
+  sv('eb-name',D.name);sv('eb-sub',D.sub);sv('eb-loc',D.loc);sv('eb-tag',D.tag);sv('eb-ticker',D.ticker);
+  sv('eh-h1',D.heroH1);sv('eh-course',D.heroCourse);sv('eh-org',D.heroOrg);sv('eh-loc',D.heroLoc);
+  sv('eh-elig',D.elig);sv('eh-dur',D.dur);sv('eh-mode',D.mode);sv('eh-fees',D.fees);
+  sv('ec-phone',D.phone);sv('ec-addr',D.addr);sv('ec-hours',D.hours);sv('ec-wa',D.wa);sv('ec-email',D.email);
+  renderLearnEdit();renderBenEdit();renderGalEdit();renderNoticeEdit();renderApps();updatePendBadge();
+}
+function sv(id,val){const el=document.getElementById(id);if(el)el.value=val}
+
+// ============================================================
+// LEARN EDIT
+// ============================================================
+const learnEmojis=['🥗','🧘','🌿','❤️','🔬','📚','🌱','💊','🧪','🏋️','🍵','🌸','💆','🫁'];
+function renderLearnEdit(){
+  document.getElementById('learnEdit').innerHTML=D.learn.map((l,i)=>`
+    <div class="litem">
+      <div class="cyc-btn" onclick="cycArr('learn',${i},'icon',learnEmojis)">${l.icon}</div>
+      <div class="litem-c">
+        <div class="er"><div class="eg"><label class="el">Subject Title</label><input class="ei" value="${l.title}" onchange="D.learn[${i}].title=this.value"></div></div>
+        <div class="eg" style="margin-top:8px"><label class="el">Description</label><textarea class="eta" style="min-height:55px" onchange="D.learn[${i}].desc=this.value">${l.desc}</textarea></div>
+      </div>
+      <button class="dbtn" onclick="D.learn.splice(${i},1);renderLearnEdit()">🗑️</button>
+    </div>`).join('');
+}
+function addLearn(){D.learn.push({icon:'📌',title:'New Subject',desc:'Description here'});renderLearnEdit()}
+function saveLearn(){renderHome();toast('✅ Curriculum Saved!')}
+
+// ============================================================
+// BENEFITS EDIT
+// ============================================================
+const benEmojis=['💼','🏆','🌿','📜','🎯','💡','🤝','⭐','🏅','🌟','🔥','✅'];
+function renderBenEdit(){
+  document.getElementById('benefitsEdit').innerHTML=D.benefits.map((b,i)=>`
+    <div class="litem">
+      <div class="cyc-btn" onclick="cycArr('benefits',${i},'icon',benEmojis)">${b.icon}</div>
+      <div class="litem-c">
+        <div class="eg" style="margin-bottom:8px"><label class="el">Benefit Title</label><input class="ei" value="${b.title}" onchange="D.benefits[${i}].title=this.value"></div>
+        <div class="eg" style="margin-bottom:8px"><label class="el">Description</label><textarea class="eta" style="min-height:55px" onchange="D.benefits[${i}].desc=this.value">${b.desc}</textarea></div>
+        <label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" ${b.isFranchise?'checked':''} onchange="D.benefits[${i}].isFranchise=this.checked" style="accent-color:var(--g3)"><span style="font-family:var(--cb);font-size:12px;color:rgba(255,253,245,0.45)">Franchise gold style</span></label>
+      </div>
+      <button class="dbtn" onclick="D.benefits.splice(${i},1);renderBenEdit()">🗑️</button>
+    </div>`).join('');
+}
+function addBenefit(){D.benefits.push({icon:'⭐',title:'New Benefit',desc:'Description',isFranchise:false});renderBenEdit()}
+function saveBenefits(){renderHome();toast('✅ Benefits Saved!')}
+
+// ============================================================
+// GALLERY EDIT
+// ============================================================
+const galEmojis=['🏫','🌿','📚','🧘','🔬','🎓','🌱','📋','🤝','📸','🌸','🏆','🌺','💆'];
+function renderGalEdit(){
+  document.getElementById('galEdit').innerHTML=D.gallery.map((g,i)=>`
+    <div class="litem" style="align-items:center">
+      <div class="cyc-btn" onclick="cycArr('gallery',${i},'emoji',galEmojis)">${g.emoji}</div>
+      <div class="litem-c"><div class="eg"><label class="el">Caption</label><input class="ei" value="${g.cap}" onchange="D.gallery[${i}].cap=this.value"></div></div>
+      <button class="dbtn" onclick="D.gallery.splice(${i},1);renderGalEdit()">🗑️</button>
+    </div>`).join('');
+}
+function addGal(){D.gallery.push({emoji:'📸',cap:'New Photo'});renderGalEdit()}
+function saveGal(){renderHome();toast('✅ Gallery Saved!')}
+
+// ============================================================
+// NOTICES EDIT
+// ============================================================
+const notIcons=['📢','💰','🏆','📚','🌿','🎓','📌','🔔','⚠️','📣','🌟','💫'];
+function renderNoticeEdit(){
+  document.getElementById('noticeEdit').innerHTML=D.notices.map((n,i)=>`
+    <div class="litem" style="align-items:center">
+      <div class="cyc-btn" onclick="cycNotice(${i})">${n.icon}</div>
+      <div class="litem-c">
+        <div class="er"><div class="eg"><label class="el">Notice Title</label><input class="ei" value="${n.title}" onchange="D.notices[${i}].title=this.value"></div><div class="eg"><label class="el">Date</label><input class="ei" value="${n.date}" onchange="D.notices[${i}].date=this.value"></div></div>
+        <label style="display:flex;gap:8px;align-items:center;margin-top:6px;cursor:pointer"><input type="checkbox" ${n.isNew?'checked':''} onchange="D.notices[${i}].isNew=this.checked" style="accent-color:var(--g3)"><span style="font-family:var(--cb);font-size:12px;color:rgba(255,253,245,0.42)">"NEW" badge show karein</span></label>
+      </div>
+      <button class="dbtn" onclick="D.notices.splice(${i},1);renderNoticeEdit()">🗑️</button>
+    </div>`).join('');
+}
+function cycNotice(i){const c=D.notices[i].icon;D.notices[i].icon=notIcons[(notIcons.indexOf(c)+1)%notIcons.length];renderNoticeEdit()}
+function addNotice(){D.notices.unshift({icon:'📢',title:'New Notice',date:'2024',isNew:true});renderNoticeEdit()}
+function saveNotices(){renderHome();toast('✅ Notices Saved!')}
+
+// ============================================================
+// SAVE FUNCTIONS
+// ============================================================
+function saveBrand(){
+  D.name=gv('eb-name')||D.name;D.sub=gv('eb-sub')||D.sub;D.loc=gv('eb-loc')||D.loc;
+  D.tag=gv('eb-tag')||D.tag;D.ticker=gv('eb-ticker')||D.ticker;D.logo=pickedLogo;
+  renderHome();toast('✅ Branding Saved!');
+}
+function saveHero(){
+  D.heroH1=gv('eh-h1')||D.heroH1;D.heroCourse=gv('eh-course')||D.heroCourse;
+  D.heroOrg=gv('eh-org')||D.heroOrg;D.heroLoc=gv('eh-loc')||D.heroLoc;
+  D.elig=gv('eh-elig')||D.elig;D.dur=gv('eh-dur')||D.dur;D.mode=gv('eh-mode')||D.mode;D.fees=gv('eh-fees')||D.fees;
+  renderHome();toast('✅ Hero Info Saved!');
+}
+function saveContact(){
+  D.phone=gv('ec-phone')||D.phone;D.addr=gv('ec-addr')||D.addr;
+  D.hours=gv('ec-hours')||D.hours;D.wa=gv('ec-wa')||D.wa;D.email=gv('ec-email')||D.email;
+  renderHome();toast('✅ Contact Saved!');
+}
+function chgPass(){
+  const p1=gv('np1'),p2=gv('np2');
+  if(!p1)return toast('❌ Password empty!');
+  if(p1!==p2)return toast('❌ Passwords match nahi!');
+  D.adminPass=p1;sv('np1','');sv('np2','');toast('✅ Password Changed!');
+}
+function pickLogo(el,e){pickedLogo=e;document.querySelectorAll('.lopt').forEach(x=>x.classList.remove('sel'));el.classList.add('sel')}
+function cycArr(arr,i,field,list){const c=D[arr][i][field];D[arr][i][field]=list[(list.indexOf(c)+1)%list.length];({learn:renderLearnEdit,benefits:renderBenEdit,gallery:renderGalEdit})[arr]?.()}
+function togSec(id){document.getElementById(id).classList.toggle('open')}
+
+// ============================================================
+// NAV
+// ============================================================
+function gotoSec(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}
+function scrollToTop(){document.getElementById('hscroll').scrollTo({top:0,behavior:'smooth'})}
+function bnClick(el,sec){document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));el.classList.add('active');gotoSec(sec)}
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>
